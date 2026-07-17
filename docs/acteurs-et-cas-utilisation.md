@@ -2,77 +2,113 @@
 
 ## Acteurs
 
-### Visiteur non connecté
+Le futur diagramme présente exactement trois acteurs :
 
-Le visiteur découvre le restaurant sans disposer d’une session authentifiée.
+### Visiteur
 
-Cas d’utilisation :
+Le visiteur utilise l’application sans être authentifié. Il peut consulter les contenus publics, remplir le formulaire de réservation, consulter les disponibilités, créer un compte et se connecter.
+
+### Client
+
+Le client utilise le même formulaire de connexion que l’administrateur. Ses fonctionnalités privées nécessitent son authentification. Il peut gérer son profil et ses propres réservations.
+
+### Administrateur
+
+L’administrateur utilise le même formulaire de connexion que le client. Son compte est le seul à être créé directement dans la base de données. Une fois authentifié, il dispose des fonctionnalités de gestion du restaurant.
+
+## Cas d’utilisation publics
+
+Cas d’utilisation associés au Visiteur :
 
 - consulter l’accueil ;
 - consulter la galerie ;
 - consulter la carte et les menus ;
-- commencer une réservation ;
+- réserver une table ;
 - créer un compte ;
 - se connecter.
 
-### Client connecté
+Une note pourra préciser que les contenus publics restent accessibles aux utilisateurs connectés, sans ajouter toutes les associations correspondantes si elles surchargent le diagramme.
 
-Le client est un utilisateur authentifié qui accède à ses informations et à ses propres réservations.
+## Cas d’utilisation du Client
 
-Cas d’utilisation :
+Cas d’utilisation associés au Client :
 
 - se connecter ;
 - se déconnecter ;
-- consulter et gérer ses informations personnelles, dont son nombre de convives par défaut et ses allergies éventuelles ;
-- créer et confirmer une réservation ;
+- gérer son profil ;
+- réserver une table ;
 - consulter ses réservations ;
 - modifier une réservation ;
 - supprimer une réservation ;
 - supprimer son compte.
 
-### Administrateur
+« Gérer son profil » comprend notamment la consultation et la modification du nombre de convives par défaut et des allergies éventuelles.
 
-L’administrateur est un utilisateur authentifié disposant de droits de gestion étendus. Son compte est le seul à être créé directement dans la base de données. Il utilise le même formulaire de connexion que le client, avec une adresse e-mail et un mot de passe sécurisé.
+## Cas d’utilisation de l’Administrateur
 
-Cas d’utilisation :
+Cas d’utilisation associés à l’Administrateur :
 
 - se connecter ;
 - se déconnecter ;
-- gérer les horaires du restaurant ;
+- gérer les horaires ;
 - gérer la capacité maximale ;
 - gérer la galerie ;
 - gérer les catégories de plats ;
 - gérer les plats ;
 - gérer les menus ;
-- consulter toutes les réservations ;
-- filtrer les réservations par jour ;
-- modifier une réservation ;
-- supprimer une réservation.
+- gérer les réservations ;
+- filtrer les réservations par jour.
 
-## Relations importantes entre les cas d’utilisation
+Les opérations de création, de consultation, de modification et de suppression restent regroupées dans les cas « Gérer... » afin de préserver la lisibilité du diagramme.
 
-- « Confirmer une réservation » nécessite « Être authentifié ».
-- « Créer une réservation » inclut la saisie du nombre de couverts, de la date, de l’heure et des allergies éventuelles.
-- Lorsqu’un client est connecté, son nombre de convives par défaut et les allergies renseignées dans son profil préremplissent le formulaire de réservation.
-- « Gérer ses informations personnelles » inclut la modification du nombre de convives par défaut et des allergies éventuelles du client.
-- « Se connecter » utilise le même formulaire pour le client et l’administrateur.
-- « Créer une réservation » et « Modifier une réservation » incluent la vérification des disponibilités et de la capacité maximale.
-- « Choisir une heure » dépend de la génération de créneaux par intervalles de quinze minutes.
-- « Gérer la galerie », « Gérer les catégories », « Gérer les plats » et « Gérer les menus » regroupent les opérations de consultation, création, modification et suppression adaptées à chaque ressource.
-- « Filtrer les réservations par jour » complète la consultation de toutes les réservations par l’administrateur.
-- Les actions portant sur les données personnelles et les réservations d’un client sont limitées à ce client.
+## Associations acteur–cas d’utilisation
 
-## Proposition pour le futur diagramme UML
+| Acteur | Cas d’utilisation associés |
+|---|---|
+| Visiteur | Consulter l’accueil ; Consulter la galerie ; Consulter la carte et les menus ; Réserver une table ; Créer un compte ; Se connecter |
+| Client | Se connecter ; Se déconnecter ; Gérer son profil ; Réserver une table ; Consulter ses réservations ; Modifier une réservation ; Supprimer une réservation ; Supprimer son compte |
+| Administrateur | Se connecter ; Se déconnecter ; Gérer les horaires ; Gérer la capacité maximale ; Gérer la galerie ; Gérer les catégories de plats ; Gérer les plats ; Gérer les menus ; Gérer les réservations ; Filtrer les réservations par jour |
 
-Le futur diagramme de cas d’utilisation pourra être structuré ainsi :
+Les cas « Se connecter » et « Se déconnecter » sont communs au Client et à l’Administrateur. Aucune relation `<<extend>>` ne relie « Se connecter » ou « Créer un compte » à « Réserver une table ».
 
-1. Placer les trois acteurs à l’extérieur de la frontière du système : visiteur, client et administrateur.
-2. Regrouper les cas publics dans un ensemble « Consulter le site ».
-3. Regrouper l’inscription et l’authentification dans un ensemble « Accès au compte ».
-4. Regrouper le parcours de réservation dans un ensemble « Réservations ».
-5. Regrouper les informations personnelles dans un ensemble « Espace client ».
-6. Regrouper les fonctions de gestion dans un ensemble « Administration ».
-7. Représenter l’authentification obligatoire pour la confirmation d’une réservation.
-8. Représenter la vérification des disponibilités et de la capacité comme une inclusion de la création et de la modification d’une réservation.
+## Relations `<<include>>`
 
-Le diagramme graphique sera réalisé lors de la phase dédiée.
+Les vérifications suivantes sont obligatoires :
+
+- « Réserver une table » `<<include>>` « Vérifier les disponibilités » ;
+- « Réserver une table » `<<include>>` « Vérifier la capacité maximale » ;
+- « Modifier une réservation » `<<include>>` « Vérifier les disponibilités » ;
+- « Modifier une réservation » `<<include>>` « Vérifier la capacité maximale ».
+
+La flèche en pointillés part du cas principal vers le cas inclus, car la vérification fait obligatoirement partie du comportement du cas principal.
+
+## Relations `<<extend>>`
+
+Aucune relation `<<extend>>` n’est nécessaire dans cette version simplifiée du diagramme.
+
+En particulier, « Se connecter » et « Créer un compte » ne sont pas des extensions de « Réserver une table » : ils restent des cas d’utilisation indépendants.
+
+## Notes UML et règles métier
+
+Les notes suivantes devront accompagner le cas « Réserver une table » et ses vérifications :
+
+- « Le visiteur peut remplir le formulaire et consulter les disponibilités, mais il doit se connecter ou créer un compte avant de confirmer la réservation. »
+- « Pour un client connecté, le nombre de convives par défaut et les allergies renseignées dans le profil sont proposés automatiquement. »
+- « Les horaires sont proposés par tranches de quinze minutes. »
+- « Les disponibilités sont actualisées sans rechargement de la page. »
+- « Une réservation dépassant la capacité maximale est refusée. »
+
+Le préremplissage depuis le profil est un comportement automatique et non un cas d’utilisation indépendant.
+
+## Organisation recommandée du futur diagramme
+
+Le diagramme pourra être organisé en quatre zones à l’intérieur de la frontière « Application Quai Antique » :
+
+1. consultation publique ;
+2. compte et authentification ;
+3. réservations ;
+4. administration.
+
+Le Visiteur et le Client pourront être placés à gauche du système, près des cas publics et des réservations. L’Administrateur pourra être placé à droite, près des cas de gestion. Les cas inclus « Vérifier les disponibilités » et « Vérifier la capacité maximale » devront rester proches des cas liés aux réservations pour limiter les croisements.
+
+Les détails techniques et les opérations CRUD individuelles ne seront pas représentés afin de conserver un diagramme lisible.
