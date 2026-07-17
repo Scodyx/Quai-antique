@@ -1,0 +1,40 @@
+# Dépendances
+node_modules/
+
+# Journaux
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Fichiers temporaires et caches
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
+.sass-cache/
+
+# Configuration locale
+*.local
+config.local.*
+
+# Variables d'environnement
+.env
+.env.*
+!.env.example
+
+# Éditeurs et système d'exploitation
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Dossiers de compilation futurs
+dist/
+build/
+public/build/
