@@ -16,6 +16,7 @@ temp/
 *.temp
 .cache/
 .sass-cache/
+.vite/
 
 # Configuration locale
 *.local

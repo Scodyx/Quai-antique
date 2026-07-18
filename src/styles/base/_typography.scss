@@ -1,0 +1,21 @@
+@use '../abstracts/variables' as variables;
+
+body {
+  font-family: variables.$font-body;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+.site-header__brand,
+.site-footer__name {
+  font-family: variables.$font-heading;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  line-height: 1.1;
+}

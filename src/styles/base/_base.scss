@@ -1,0 +1,46 @@
+@use '../abstracts/variables' as variables;
+
+html {
+  min-width: 320px;
+  background-color: variables.$color-background;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: variables.$color-text;
+  background-color: variables.$color-background;
+}
+
+#app {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.site-container {
+  max-width: variables.$container-max-width;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid variables.$color-primary;
+  outline-offset: 2px;
+}
+
+.not-found {
+  display: grid;
+  flex: 1;
+  min-height: 60vh;
+  padding: 4rem 0;
+  place-items: center;
+}
+
+.not-found__code {
+  margin: 0;
+  color: variables.$color-accent;
+  font-family: variables.$font-heading;
+  font-size: clamp(5rem, 15vw, 9rem);
+  font-weight: 600;
+  line-height: 1;
+}

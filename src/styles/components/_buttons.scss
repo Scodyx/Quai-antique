@@ -1,0 +1,20 @@
+@use '../abstracts/variables' as variables;
+
+.btn {
+  min-height: 44px;
+  padding: 0.625rem 1.5rem;
+  border-radius: variables.$radius-md;
+  font-weight: 600;
+}
+
+.btn-primary {
+  border-color: variables.$color-primary;
+  background-color: variables.$color-primary;
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: variables.$color-primary-hover;
+    background-color: variables.$color-primary-hover;
+  }
+}

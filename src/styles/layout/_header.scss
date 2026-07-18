@@ -1,0 +1,20 @@
+@use '../abstracts/variables' as variables;
+
+.site-header {
+  border-bottom: 1px solid variables.$color-border;
+  background-color: variables.$color-surface;
+}
+
+.site-header__brand {
+  color: variables.$color-primary;
+  font-size: 1.75rem;
+}
+
+.site-header .nav-link {
+  color: variables.$color-text;
+
+  &:hover,
+  &.active {
+    color: variables.$color-primary;
+  }
+}

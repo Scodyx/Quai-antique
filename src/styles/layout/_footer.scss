@@ -1,0 +1,21 @@
+@use '../abstracts/variables' as variables;
+
+.site-footer {
+  padding: 2rem 0;
+  color: variables.$color-surface;
+  background-color: variables.$color-primary-hover;
+}
+
+.site-footer__content {
+  display: grid;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer__name {
+  font-size: 1.5rem;
+}

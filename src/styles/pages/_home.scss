@@ -1,0 +1,29 @@
+@use '../abstracts/variables' as variables;
+
+.home-hero {
+  display: grid;
+  flex: 1;
+  min-height: 65vh;
+  padding: 4rem 0;
+  place-items: center;
+  text-align: center;
+}
+
+.home-hero__content {
+  max-width: 760px;
+}
+
+.home-hero__eyebrow {
+  margin-bottom: 1rem;
+  color: variables.$color-accent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-hero__intro {
+  max-width: 620px;
+  margin: 1.5rem auto;
+  color: variables.$color-text-muted;
+}
