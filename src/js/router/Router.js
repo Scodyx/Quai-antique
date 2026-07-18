@@ -2,6 +2,7 @@ export class Router {
   constructor(routes, appSelector) {
     this.routes = routes;
     this.app = document.querySelector(appSelector);
+    this.cleanupCurrentPage = null;
   }
 
   start() {
@@ -52,7 +53,21 @@ export class Router {
       throw new Error('Aucune route de secours n’est définie.');
     }
 
+    if (this.cleanupCurrentPage) {
+      this.cleanupCurrentPage();
+      this.cleanupCurrentPage = null;
+    }
+
     this.app.innerHTML = route.page();
+
+    if (typeof route.onMount === 'function') {
+      const cleanup = route.onMount();
+
+      if (typeof cleanup === 'function') {
+        this.cleanupCurrentPage = cleanup;
+      }
+    }
+
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 }

@@ -1,0 +1,311 @@
+@use '../abstracts/variables' as variables;
+
+.reservation-page {
+  flex: 1;
+}
+
+.reservation-intro {
+  background:
+    radial-gradient(circle at 85% 20%, rgba(183, 121, 62, 0.14), transparent 28%),
+    variables.$color-background;
+  text-align: center;
+}
+
+.reservation-intro__content {
+  max-width: 760px;
+}
+
+.reservation-intro h1 {
+  margin-bottom: 1rem;
+}
+
+.reservation-intro__content > p:last-child {
+  margin: 0 auto;
+  color: variables.$color-text-muted;
+  font-size: 1.05rem;
+}
+
+.reservation-section {
+  padding-top: 0;
+}
+
+.reservation-layout {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.reservation-form,
+.reservation-summary {
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background-color: variables.$color-surface;
+  box-shadow: 0 2px 12px rgba(31, 35, 33, 0.08);
+}
+
+.reservation-form__fields {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.reservation-field label,
+.reservation-slots legend {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.reservation-field .form-control {
+  min-height: 44px;
+  border-color: variables.$color-border;
+  border-radius: variables.$radius-sm;
+  color: variables.$color-text;
+  background-color: variables.$color-surface;
+}
+
+.reservation-field textarea.form-control {
+  min-height: 112px;
+}
+
+.reservation-field .form-control:focus {
+  border-color: variables.$color-primary;
+  box-shadow: 0 0 0 0.2rem rgba(47, 74, 58, 0.18);
+}
+
+.reservation-field .form-control.is-invalid {
+  border-color: variables.$color-error;
+  background-image: none;
+}
+
+.reservation-field__help,
+.reservation-slots__hint {
+  margin: 0.5rem 0 0;
+  color: variables.$color-text-muted;
+  font-size: 0.875rem;
+}
+
+.reservation-error {
+  min-height: 1.25rem;
+  margin: 0.35rem 0 0;
+  color: variables.$color-error;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.reservation-slots {
+  min-width: 0;
+  margin-top: 2rem;
+  padding: 2rem 0 0;
+  border: 0;
+  border-top: 1px solid variables.$color-border;
+}
+
+.reservation-slots legend {
+  float: none;
+  width: auto;
+  padding: 0;
+  font-family: variables.$font-heading;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.reservation-services {
+  display: grid;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.reservation-service h2 {
+  margin-bottom: 1rem;
+  font-family: variables.$font-body;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.reservation-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.reservation-slot {
+  display: flex;
+  min-width: 0;
+  min-height: 64px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border: 1px solid variables.$color-primary;
+  border-radius: variables.$radius-md;
+  color: variables.$color-primary;
+  background-color: variables.$color-surface;
+  line-height: 1.25;
+}
+
+.reservation-slot:hover:not(:disabled),
+.reservation-slot:focus-visible:not(:disabled) {
+  color: variables.$color-surface;
+  background-color: variables.$color-primary-hover;
+}
+
+.reservation-slot--selected,
+.reservation-slot--selected:hover:not(:disabled) {
+  color: variables.$color-surface;
+  background-color: variables.$color-primary;
+  box-shadow: inset 0 0 0 2px variables.$color-surface;
+}
+
+.reservation-slot:disabled {
+  border-color: variables.$color-border;
+  color: variables.$color-text-muted;
+  background-color: variables.$color-background;
+  cursor: not-allowed;
+}
+
+.reservation-slot__time {
+  font-weight: 600;
+}
+
+.reservation-slot__status {
+  margin-top: 0.2rem;
+  font-size: 0.72rem;
+}
+
+.reservation-empty {
+  margin: 0;
+  padding: 1rem;
+  border: 1px dashed variables.$color-border;
+  border-radius: variables.$radius-md;
+  color: variables.$color-text-muted;
+  background-color: variables.$color-background;
+}
+
+.reservation-summary {
+  position: static;
+}
+
+.reservation-summary h2 {
+  margin-bottom: 1.5rem;
+}
+
+.reservation-summary__list {
+  margin: 0;
+  border-top: 1px solid variables.$color-border;
+}
+
+.reservation-summary__list > div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid variables.$color-border;
+}
+
+.reservation-summary__list dt {
+  font-weight: 600;
+}
+
+.reservation-summary__list dd {
+  overflow-wrap: anywhere;
+  margin: 0;
+  color: variables.$color-text-muted;
+  text-align: right;
+}
+
+.reservation-actions {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.reservation-actions .btn {
+  width: 100%;
+}
+
+.reservation-clear {
+  min-height: 44px;
+  border: 0;
+  color: variables.$color-primary;
+  background: transparent;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+.reservation-clear:hover,
+.reservation-clear:focus {
+  color: variables.$color-primary-hover;
+}
+
+.reservation-auth-modal .modal-content {
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background-color: variables.$color-surface;
+}
+
+.reservation-auth-modal .modal-header,
+.reservation-auth-modal .modal-footer {
+  border-color: variables.$color-border;
+}
+
+.reservation-auth-modal .modal-title {
+  font-family: variables.$font-heading;
+  font-size: 1.75rem;
+}
+
+.reservation-auth-modal__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.reservation-auth-modal__actions .btn {
+  width: 100%;
+}
+
+@media (min-width: 390px) {
+  .reservation-slot-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 576px) {
+  .reservation-form,
+  .reservation-summary {
+    padding: 1.5rem;
+  }
+
+  .reservation-form__fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reservation-field--full {
+    grid-column: 1 / -1;
+  }
+
+  .reservation-slot-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .reservation-auth-modal__actions {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .reservation-auth-modal__actions .btn {
+    width: auto;
+  }
+}
+
+@media (min-width: 992px) {
+  .reservation-layout {
+    grid-template-columns: minmax(0, 1.7fr) minmax(300px, 0.8fr);
+    gap: 2rem;
+  }
+
+  .reservation-summary {
+    position: sticky;
+    top: 2rem;
+  }
+}
