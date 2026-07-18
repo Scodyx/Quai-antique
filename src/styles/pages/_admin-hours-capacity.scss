@@ -1,0 +1,95 @@
+@use '../abstracts/variables' as variables;
+
+.admin-hours-intro { max-width: 820px; margin-bottom: 1.5rem; }
+.admin-hours-intro h1 { margin-bottom: 1rem; font-family: variables.$font-body; font-size: clamp(2.1rem, 5vw, 3.1rem); }
+.admin-hours-intro > p:last-child { color: variables.$color-text-muted; }
+
+.admin-hours-live { margin-bottom: 1rem; border-color: variables.$color-success; }
+.admin-hours-dirty { display: inline-flex; margin: 0 0 1rem; padding: 0.45rem 0.75rem; border: 1px dashed variables.$color-accent; border-radius: variables.$radius-sm; color: variables.$color-text; background: variables.$color-surface; font-size: 0.875rem; font-weight: 700; }
+
+.admin-hours-capacity,
+.admin-hours-section,
+.admin-hours-summary {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background: variables.$color-surface;
+  box-shadow: 0 2px 12px rgba(31, 35, 33, 0.05);
+}
+
+.admin-hours-capacity { display: grid; gap: 1.25rem; align-items: start; }
+.admin-hours-capacity h2,
+.admin-hours-section h2,
+.admin-hours-summary h2 { margin-bottom: 0.75rem; font-family: variables.$font-body; font-size: clamp(1.45rem, 4vw, 1.9rem); }
+.admin-hours-capacity > div:first-child > p:last-child,
+.admin-hours-section__heading > p { color: variables.$color-text-muted; }
+.admin-hours-section__heading { margin-bottom: 1.5rem; }
+
+.admin-hours-field { min-width: 0; }
+.admin-hours-field label { display: block; margin-bottom: 0.45rem; font-size: 0.875rem; font-weight: 600; }
+.admin-hours-field .form-control { width: 100%; min-width: 0; min-height: 44px; border-color: variables.$color-border; border-radius: variables.$radius-sm; color: variables.$color-text; background: variables.$color-surface; }
+.admin-hours-field .form-control:focus { border-color: variables.$color-primary; box-shadow: 0 0 0 0.2rem rgba(47, 74, 58, 0.18); }
+.admin-hours-field .form-control.is-invalid { border-color: variables.$color-error; background-image: none; }
+.admin-hours-field .form-control:disabled { color: variables.$color-text-muted; background: variables.$color-background; opacity: 1; }
+.admin-hours-help { margin: 0.45rem 0 0; color: variables.$color-text-muted; font-size: 0.875rem; }
+.admin-hours-error { min-height: 1.2rem; margin: 0.3rem 0 0; color: variables.$color-error; font-size: 0.875rem; font-weight: 600; }
+
+.admin-hours-day-grid { display: grid; gap: 1rem; }
+.admin-hours-day { min-width: 0; margin: 0; padding: 1rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-md; background: variables.$color-background; }
+.admin-hours-day > legend { float: none; width: auto; margin: 0; padding: 0; font-family: variables.$font-body; font-size: 1.25rem; font-weight: 700; }
+.admin-hours-day--closed { border-style: dashed; }
+.admin-hours-day__state { display: inline-flex; margin: 0.75rem 0 0; padding: 0.25rem 0.5rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-sm; font-size: 0.8rem; font-weight: 700; }
+.admin-hours-day--closed .admin-hours-day__state { border-style: dashed; border-color: variables.$color-error; }
+
+.admin-hours-switch { display: flex; min-height: 44px; align-items: center; gap: 0.55rem; padding-left: 0; }
+.admin-hours-switch .form-check-input { width: 2.5rem; min-width: 2.5rem; height: 1.35rem; margin: 0; float: none; border-color: variables.$color-text-muted; }
+.admin-hours-switch .form-check-input:checked { border-color: variables.$color-primary; background-color: variables.$color-primary; }
+.admin-hours-switch .form-check-input:focus { box-shadow: 0 0 0 0.2rem rgba(47, 74, 58, 0.18); }
+.admin-hours-switch .form-check-input.is-invalid { border-color: variables.$color-error; }
+.admin-hours-switch .form-check-label { font-weight: 600; }
+.admin-hours-switch--day { margin-top: 0.65rem; }
+
+.admin-hours-services { display: grid; gap: 1rem; margin-top: 1rem; }
+.admin-hours-service { min-width: 0; margin: 0; padding: 1rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-sm; background: variables.$color-surface; }
+.admin-hours-service > legend { float: none; width: auto; margin: 0; padding: 0; font-family: variables.$font-body; font-size: 1rem; font-weight: 700; }
+.admin-hours-time-grid { display: grid; gap: 0.75rem; margin-top: 0.75rem; }
+
+.admin-hours-day__summary { display: grid; gap: 0.25rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid variables.$color-border; color: variables.$color-text-muted; font-size: 0.875rem; }
+.admin-hours-day__summary::before { color: variables.$color-text; content: 'Résumé du jour'; font-weight: 700; }
+
+.admin-hours-summary__capacity { padding-bottom: 1rem; border-bottom: 1px solid variables.$color-border; }
+.admin-hours-summary ul { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+.admin-hours-summary li { display: grid; gap: 0.25rem; padding: 0.85rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-sm; background: variables.$color-background; }
+.admin-hours-summary li span { color: variables.$color-text-muted; }
+
+.admin-hours-actions { display: grid; gap: 0.75rem; margin-top: 1.5rem; }
+.admin-hours-actions .btn { width: 100%; }
+
+.admin-hours-modal .modal-content { border: 1px solid variables.$color-border; border-radius: variables.$radius-md; }
+.admin-hours-modal .modal-header,
+.admin-hours-modal .modal-footer { border-color: variables.$color-border; }
+.admin-hours-modal .modal-title { font-family: variables.$font-body; font-size: 1.35rem; }
+
+@media (min-width: 576px) {
+  .admin-hours-capacity,
+  .admin-hours-section,
+  .admin-hours-summary { padding: 1.5rem; }
+  .admin-hours-time-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-hours-actions { display: flex; flex-wrap: wrap; }
+  .admin-hours-actions .btn { width: auto; }
+}
+
+@media (min-width: 768px) {
+  .admin-hours-capacity { grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr); }
+  .admin-hours-day-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-hours-summary ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1400px) {
+  .admin-hours-day-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 575.98px) {
+  .admin-hours-modal .modal-footer .btn { width: 100%; }
+}
