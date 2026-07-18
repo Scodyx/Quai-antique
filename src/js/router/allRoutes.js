@@ -1,4 +1,5 @@
 import { GalleryPage } from '../pages/GalleryPage.js';
+import { AccountPage, initAccountPage } from '../pages/AccountPage.js';
 import { HomePage } from '../pages/HomePage.js';
 import { initLoginPage, LoginPage } from '../pages/LoginPage.js';
 import { MenuPage } from '../pages/MenuPage.js';
@@ -14,5 +15,6 @@ export const allRoutes = [
   new Route('/reservation', ReservationPage, initReservationPage),
   new Route('/connexion', LoginPage, initLoginPage),
   new Route('/inscription', SignupPage, initSignupPage),
+  new Route('/mon-compte', AccountPage, initAccountPage),
   new Route('*', NotFoundPage),
 ];

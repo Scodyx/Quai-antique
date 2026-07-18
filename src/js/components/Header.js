@@ -6,6 +6,8 @@ export function Header() {
     { label: 'Carte et menus', path: '/carte-et-menus' },
     { label: 'Réservation', path: '/reservation' },
     { label: 'Connexion', path: '/connexion' },
+    // Ce lien temporaire dépendra plus tard de l’état d’authentification réel.
+    { label: 'Mon compte', path: '/mon-compte' },
   ];
 
   const navigationItems = navigationLinks

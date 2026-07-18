@@ -1,0 +1,165 @@
+@use '../abstracts/variables' as variables;
+
+.account-page { flex: 1; }
+
+.account-intro {
+  background: radial-gradient(circle at 85% 20%, rgba(183, 121, 62, 0.14), transparent 28%), variables.$color-background;
+  text-align: center;
+}
+
+.account-intro__content { max-width: 850px; }
+.account-intro h1 { margin-bottom: 1rem; }
+.account-intro__content > p:not(.section-eyebrow) { color: variables.$color-text-muted; }
+
+.account-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.account-nav a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  color: variables.$color-primary;
+  background: variables.$color-surface;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.account-nav a:hover,
+.account-nav a:focus { color: variables.$color-surface; background: variables.$color-primary; }
+
+.account-layout {
+  display: grid;
+  gap: 1.5rem;
+  padding-top: 0;
+  padding-bottom: 4rem;
+}
+
+.account-card {
+  min-width: 0;
+  padding: 1.25rem;
+  scroll-margin-top: 7rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background: variables.$color-surface;
+  box-shadow: 0 2px 12px rgba(31, 35, 33, 0.08);
+}
+
+.account-card__heading { margin-bottom: 1.5rem; }
+.account-card__heading h2 { margin-bottom: 0; }
+
+.account-form,
+.account-form__grid { display: grid; gap: 1.25rem; }
+
+.account-field { min-width: 0; }
+.account-field label { display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; }
+.account-field label span { color: variables.$color-text-muted; font-weight: 400; }
+
+.account-field .form-control {
+  min-height: 44px;
+  border-color: variables.$color-border;
+  border-radius: variables.$radius-sm;
+  color: variables.$color-text;
+}
+
+.account-field textarea.form-control { min-height: 112px; }
+.account-field .form-control:focus { border-color: variables.$color-primary; box-shadow: 0 0 0 0.2rem rgba(47, 74, 58, 0.18); }
+.account-field .form-control.is-invalid { border-color: variables.$color-error; background-image: none; }
+
+.account-help { margin: 0.5rem 0 0; color: variables.$color-text-muted; font-size: 0.875rem; }
+.account-error { min-height: 1.25rem; margin: 0.35rem 0 0; color: variables.$color-error; font-size: 0.875rem; font-weight: 600; }
+
+.account-live { margin: 0; border-color: variables.$color-success; }
+
+.account-reservation-group + .account-reservation-group {
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid variables.$color-border;
+}
+
+.account-reservation-group h3 { margin-bottom: 1rem; font-size: 1.5rem; }
+.account-reservation-grid { display: grid; gap: 1rem; }
+
+.account-reservation {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background: variables.$color-background;
+}
+
+.account-reservation--cancelled { border-style: dashed; }
+.account-reservation--cancelled::before { display: block; margin-bottom: 0.75rem; content: 'Réservation annulée'; font-weight: 700; }
+
+.account-reservation__heading { display: flex; flex-direction: column; align-items: start; gap: 0.75rem; }
+.account-reservation__heading h4 { margin: 0; font-family: variables.$font-heading; font-size: 1.35rem; font-weight: 600; }
+
+.account-status {
+  display: inline-flex;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-sm;
+  color: variables.$color-text;
+  background: variables.$color-surface;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.account-status--confirmee { border-color: variables.$color-success; }
+.account-status--passee { color: variables.$color-text-muted; }
+.account-status--annulee { border-style: dashed; border-color: variables.$color-error; }
+
+.account-reservation__details { margin: 1rem 0; }
+.account-reservation__details > div,
+.account-cancel-summary > div { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); gap: 1rem; padding: 0.55rem 0; border-top: 1px solid variables.$color-border; }
+.account-reservation__details dt,
+.account-cancel-summary dt { font-weight: 600; }
+.account-reservation__details dd,
+.account-cancel-summary dd { overflow-wrap: anywhere; margin: 0; color: variables.$color-text-muted; text-align: right; }
+
+.account-reservation__actions { display: grid; gap: 0.75rem; }
+.account-reservation__actions .btn { width: 100%; }
+.account-reservation__no-action { margin: 0; color: variables.$color-text-muted; font-size: 0.875rem; }
+
+.account-btn-danger-outline { border: 1px solid variables.$color-error; color: variables.$color-error; background: transparent; }
+.account-btn-danger-outline:hover,
+.account-btn-danger-outline:focus { color: variables.$color-surface; background: variables.$color-error; }
+
+.account-danger-zone { border: 2px solid variables.$color-error; background: #fffafa; }
+.account-danger-zone > p:not(.section-eyebrow) { max-width: 720px; color: variables.$color-text-muted; }
+
+.account-modal .modal-content { border: 1px solid variables.$color-border; border-radius: variables.$radius-md; }
+.account-modal .modal-header,
+.account-modal .modal-footer { border-color: variables.$color-border; }
+.account-modal .modal-title { font-family: variables.$font-heading; font-size: 1.75rem; }
+.account-modal .account-field + .account-field { margin-top: 1rem; }
+.account-cancel-summary { margin: 1rem 0 0; }
+
+@media (min-width: 576px) {
+  .account-card { padding: 2rem; }
+  .account-reservation__heading { flex-direction: row; justify-content: space-between; }
+  .account-reservation__actions { display: flex; flex-wrap: wrap; }
+  .account-reservation__actions .btn { width: auto; }
+}
+
+@media (min-width: 768px) {
+  .account-layout { gap: 2rem; padding-bottom: 5rem; }
+  .account-form__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+  .account-field--full { grid-column: 1 / -1; }
+  .account-card__heading--row { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
+  .account-reservation-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 575.98px) {
+  .account-form > .btn,
+  .account-danger-zone > .btn,
+  .account-card__heading--row .btn,
+  .account-modal .modal-footer .btn { width: 100%; }
+}
