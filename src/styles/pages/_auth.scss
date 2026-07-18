@@ -1,0 +1,220 @@
+@use '../abstracts/variables' as variables;
+
+.auth-page {
+  flex: 1;
+}
+
+.auth-intro {
+  padding-bottom: 2.5rem;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(183, 121, 62, 0.14), transparent 28%),
+    variables.$color-background;
+}
+
+.auth-intro__content {
+  max-width: 760px;
+}
+
+.auth-intro h1 {
+  margin-bottom: 1rem;
+}
+
+.auth-intro__content > p:last-child {
+  margin-bottom: 0;
+  color: variables.$color-text-muted;
+  font-size: 1.05rem;
+}
+
+.auth-section {
+  padding-top: 0;
+}
+
+.auth-container {
+  max-width: 480px;
+}
+
+.auth-container--wide {
+  max-width: 760px;
+}
+
+.auth-card,
+.auth-pending {
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background-color: variables.$color-surface;
+  box-shadow: 0 2px 12px rgba(31, 35, 33, 0.08);
+}
+
+.auth-card {
+  padding: 1.25rem;
+}
+
+.auth-pending {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-left: 4px solid variables.$color-primary;
+}
+
+.auth-pending h2 {
+  margin-bottom: 0.5rem;
+  font-family: variables.$font-body;
+  font-size: 1.1rem;
+}
+
+.auth-pending p {
+  margin-bottom: 0.5rem;
+  color: variables.$color-text-muted;
+}
+
+.auth-pending a,
+.auth-switch a {
+  color: variables.$color-primary;
+  font-weight: 600;
+  text-underline-offset: 0.2rem;
+}
+
+.auth-form,
+.auth-form__grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.auth-field {
+  min-width: 0;
+}
+
+.auth-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.auth-field .form-control {
+  min-height: 44px;
+  border-color: variables.$color-border;
+  border-radius: variables.$radius-sm;
+  color: variables.$color-text;
+  background-color: variables.$color-surface;
+}
+
+.auth-field textarea.form-control {
+  min-height: 112px;
+}
+
+.auth-field .form-control:focus {
+  border-color: variables.$color-primary;
+  box-shadow: 0 0 0 0.2rem rgba(47, 74, 58, 0.18);
+}
+
+.auth-field .form-control.is-invalid {
+  border-color: variables.$color-error;
+  background-image: none;
+}
+
+.auth-field .form-control.is-valid {
+  border-color: variables.$color-success;
+  background-image: none;
+}
+
+.auth-password {
+  position: relative;
+}
+
+.auth-password .form-control {
+  padding-right: 6.75rem;
+}
+
+.auth-password__toggle {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 6rem;
+  min-height: 40px;
+  padding: 0.35rem 0.65rem;
+  border: 0;
+  border-left: 1px solid variables.$color-border;
+  border-radius: 0 variables.$radius-sm variables.$radius-sm 0;
+  color: variables.$color-primary;
+  background-color: variables.$color-background;
+  font-weight: 600;
+}
+
+.auth-password__toggle:hover,
+.auth-password__toggle:focus {
+  color: variables.$color-surface;
+  background-color: variables.$color-primary;
+}
+
+.auth-password-criteria {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  color: variables.$color-text-muted;
+  font-size: 0.875rem;
+  list-style: none;
+}
+
+.auth-password-criteria__item--met {
+  color: variables.$color-success;
+  font-weight: 600;
+}
+
+.auth-error {
+  min-height: 1.25rem;
+  margin: 0.35rem 0 0;
+  color: variables.$color-error;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.auth-help {
+  margin: 0.5rem 0 0;
+  color: variables.$color-text-muted;
+  font-size: 0.875rem;
+}
+
+.auth-optional {
+  color: variables.$color-text-muted;
+  font-weight: 400;
+}
+
+.auth-submit {
+  width: 100%;
+}
+
+.auth-feedback {
+  margin: 0;
+  border-color: variables.$color-success;
+  color: variables.$color-text;
+  background-color: rgba(46, 125, 79, 0.1);
+}
+
+.auth-switch {
+  margin: 1.5rem 0 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid variables.$color-border;
+  text-align: center;
+}
+
+@media (min-width: 576px) {
+  .auth-card {
+    padding: 2rem;
+  }
+
+  .auth-pending {
+    padding: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .auth-form__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .auth-field--full {
+    grid-column: 1 / -1;
+  }
+}
