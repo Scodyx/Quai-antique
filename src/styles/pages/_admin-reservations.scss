@@ -1,0 +1,145 @@
+@use '../abstracts/variables' as variables;
+
+.admin-reservations-intro { max-width: 800px; margin-bottom: 2rem; }
+.admin-reservations-intro h1 { margin-bottom: 1rem; font-family: variables.$font-body; font-size: clamp(2.1rem, 5vw, 3.1rem); }
+.admin-reservations-intro > p:last-child { color: variables.$color-text-muted; }
+
+.admin-reservations-live { margin-bottom: 1.5rem; border-color: variables.$color-success; }
+
+.admin-reservations-panel {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background: variables.$color-surface;
+  box-shadow: 0 2px 12px rgba(31, 35, 33, 0.05);
+}
+
+.admin-reservations-panel h2 { margin-bottom: 1.25rem; font-family: variables.$font-body; font-size: clamp(1.4rem, 4vw, 1.9rem); }
+.admin-reservations-filters { display: grid; gap: 1rem; }
+.admin-reservations-field { min-width: 0; }
+.admin-reservations-field label { display: block; margin-bottom: 0.45rem; font-size: 0.875rem; font-weight: 600; }
+.admin-reservations-field label span { color: variables.$color-text-muted; font-weight: 400; }
+
+.admin-reservations-field .form-control,
+.admin-reservations-field .form-select {
+  min-height: 44px;
+  border-color: variables.$color-border;
+  border-radius: variables.$radius-sm;
+  color: variables.$color-text;
+  background-color: variables.$color-surface;
+}
+
+.admin-reservations-field textarea.form-control { min-height: 110px; }
+.admin-reservations-field .form-control:focus,
+.admin-reservations-field .form-select:focus { border-color: variables.$color-primary; box-shadow: 0 0 0 0.2rem rgba(47, 74, 58, 0.18); }
+.admin-reservations-field .is-invalid { border-color: variables.$color-error; background-image: none; }
+
+.admin-reservations-date-actions { display: grid; gap: 0.75rem; margin-top: 1.25rem; }
+.admin-reservations-date-actions .btn { width: 100%; }
+.admin-reservations-reset { border: 0; color: variables.$color-primary; background: transparent; text-decoration: underline; text-underline-offset: 0.2rem; }
+.admin-reservations-reset:hover,
+.admin-reservations-reset:focus { color: variables.$color-primary-hover; background: variables.$color-background; }
+
+.admin-reservations-section-heading p { margin: 0; color: variables.$color-text-muted; }
+.admin-reservations-indicators { display: grid; gap: 1rem; }
+
+.admin-reservations-indicator {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 1rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background: variables.$color-background;
+}
+
+.admin-reservations-indicator p { margin-bottom: 0.4rem; font-weight: 600; }
+.admin-reservations-indicator strong { color: variables.$color-primary; font-size: 2rem; line-height: 1; }
+.admin-reservations-indicator span { margin-top: 0.5rem; color: variables.$color-text-muted; font-size: 0.8rem; }
+
+.admin-reservations-table-wrap { display: none; }
+.admin-reservation-card-list { display: grid; gap: 1rem; }
+
+.admin-reservation-card {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background: variables.$color-background;
+}
+
+.admin-reservation-card--cancelled { border-style: dashed; }
+.admin-reservation-card--cancelled::before { display: block; margin-bottom: 0.75rem; content: 'Réservation annulée'; font-weight: 700; }
+.admin-reservation-card__heading { display: flex; flex-direction: column; align-items: start; gap: 0.65rem; }
+.admin-reservation-card__heading h3 { margin: 0; font-family: variables.$font-body; font-size: 1.05rem; }
+.admin-reservation-card__email { overflow-wrap: anywhere; margin: 0.75rem 0; color: variables.$color-text-muted; }
+.admin-reservation-card dl { margin: 0 0 1rem; }
+.admin-reservation-card dl > div { display: grid; grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr); gap: 0.75rem; padding: 0.55rem 0; border-top: 1px solid variables.$color-border; }
+.admin-reservation-card dt { font-weight: 600; }
+.admin-reservation-card dd { overflow-wrap: anywhere; margin: 0; color: variables.$color-text-muted; text-align: right; }
+
+.admin-status--cancelled { border-style: dashed; border-color: variables.$color-error; }
+.admin-reservations__actions { display: grid; gap: 0.65rem; }
+.admin-reservations__actions .btn { width: 100%; padding-right: 0.75rem; padding-left: 0.75rem; }
+.admin-reservations__cancel-button { border: 1px solid variables.$color-error; color: variables.$color-error; background: transparent; }
+.admin-reservations__cancel-button:hover,
+.admin-reservations__cancel-button:focus { color: variables.$color-surface; background: variables.$color-error; }
+.admin-reservations__no-action { color: variables.$color-text-muted; font-size: 0.875rem; }
+
+.admin-reservations-empty { margin: 0; padding: 1.5rem; border: 1px dashed variables.$color-border; border-radius: variables.$radius-md; color: variables.$color-text-muted; background: variables.$color-background; text-align: center; }
+
+.admin-reservations-modal .modal-content { border: 1px solid variables.$color-border; border-radius: variables.$radius-md; }
+.admin-reservations-modal .modal-header,
+.admin-reservations-modal .modal-footer { border-color: variables.$color-border; }
+.admin-reservations-modal .modal-title { font-family: variables.$font-body; font-size: 1.35rem; }
+.admin-reservations-modal .modal-header p { margin: 0.25rem 0 0; color: variables.$color-text-muted; }
+.admin-reservations-modal__grid { display: grid; gap: 1rem; }
+.admin-reservations-help { margin: 0.45rem 0 0; color: variables.$color-text-muted; font-size: 0.875rem; }
+.admin-reservations-error { min-height: 1.2rem; margin: 0.3rem 0 0; color: variables.$color-error; font-size: 0.875rem; font-weight: 600; }
+.admin-reservations-cancel-summary { margin: 1rem 0 0; }
+.admin-reservations-cancel-summary > div { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 1rem; padding: 0.6rem 0; border-top: 1px solid variables.$color-border; }
+.admin-reservations-cancel-summary dt { font-weight: 600; }
+.admin-reservations-cancel-summary dd { margin: 0; color: variables.$color-text-muted; text-align: right; }
+
+@media (min-width: 390px) {
+  .admin-reservations-indicators { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 576px) {
+  .admin-reservations-panel { padding: 1.5rem; }
+  .admin-reservations-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-reservations-date-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .admin-reservations-reset { grid-column: 1 / -1; }
+  .admin-reservation-card__heading { flex-direction: row; justify-content: space-between; }
+  .admin-reservations__actions { display: flex; flex-wrap: wrap; }
+  .admin-reservations__actions .btn { width: auto; }
+  .admin-reservations-modal__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-reservations-field--full { grid-column: 1 / -1; }
+}
+
+@media (min-width: 768px) {
+  .admin-reservations-indicators { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1200px) {
+  .admin-reservations-filters { grid-template-columns: 1.1fr 0.9fr 0.9fr 1.4fr; }
+  .admin-reservations-date-actions { display: flex; flex-wrap: wrap; }
+  .admin-reservations-date-actions .btn { width: auto; }
+  .admin-reservations-reset { margin-left: auto; }
+  .admin-reservations-table-wrap { display: block; width: 100%; overflow-x: auto; }
+  .admin-reservation-card-list { display: none; }
+  .admin-reservations-table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 0.875rem; }
+  .admin-reservations-table caption { padding: 0 0 0.75rem; color: variables.$color-text-muted; caption-side: top; }
+  .admin-reservations-table th,
+  .admin-reservations-table td { padding: 0.85rem 0.65rem; border-bottom: 1px solid variables.$color-border; text-align: left; vertical-align: top; }
+  .admin-reservations-table th { color: variables.$color-primary-hover; background: variables.$color-background; font-weight: 700; }
+  .admin-reservations-table td:nth-child(2) span { display: block; overflow-wrap: anywhere; margin-top: 0.25rem; color: variables.$color-text-muted; }
+  .admin-reservations__row--cancelled { background: #fffafa; }
+  .admin-reservations__row--cancelled td:first-child { border-left: 3px dashed variables.$color-error; }
+  .admin-reservations-table .admin-reservations__actions { flex-wrap: nowrap; }
+}
+
+@media (max-width: 575.98px) {
+  .admin-reservations-modal .modal-footer .btn { width: 100%; }
+}
