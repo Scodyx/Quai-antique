@@ -1,0 +1,239 @@
+@use '../abstracts/variables' as variables;
+
+.gallery-page {
+  flex: 1;
+}
+
+.gallery-intro {
+  background:
+    radial-gradient(circle at 85% 20%, rgba(183, 121, 62, 0.14), transparent 28%),
+    variables.$color-background;
+  text-align: center;
+}
+
+.gallery-intro__content {
+  max-width: 760px;
+}
+
+.gallery-intro h1 {
+  margin-bottom: 1rem;
+}
+
+.gallery-intro__content > p:last-child {
+  margin: 0 auto;
+  color: variables.$color-text-muted;
+  font-size: 1.05rem;
+}
+
+.gallery-collection {
+  padding-top: 0;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.gallery-card {
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+  flex-direction: column;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background-color: variables.$color-surface;
+  box-shadow: 0 2px 12px rgba(31, 35, 33, 0.08);
+}
+
+.gallery-card__visual {
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+  transition: transform 180ms ease;
+}
+
+.gallery-card__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: start;
+  padding: 1rem;
+}
+
+.gallery-card__category,
+.gallery-modal__category {
+  display: inline-flex;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-sm;
+  color: variables.$color-primary;
+  background-color: variables.$color-background;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.gallery-card h2 {
+  overflow-wrap: anywhere;
+  margin-bottom: 1rem;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.gallery-card__button {
+  width: 100%;
+  margin-top: auto;
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+}
+
+.gallery-card:focus-within {
+  outline: 3px solid variables.$color-primary;
+  outline-offset: 3px;
+}
+
+.gallery-card:focus-within .gallery-card__button {
+  outline: 0;
+}
+
+.gallery-visual--forest {
+  background: linear-gradient(145deg, variables.$color-primary-hover, #758579);
+}
+
+.gallery-visual--copper {
+  background: linear-gradient(145deg, variables.$color-accent, #694737);
+}
+
+.gallery-visual--berry {
+  background: linear-gradient(145deg, #8D625E, #422E35);
+}
+
+.gallery-visual--water {
+  background: linear-gradient(145deg, #758F8B, variables.$color-primary);
+}
+
+.gallery-visual--sage {
+  background: linear-gradient(145deg, #A6AC8A, variables.$color-primary-hover);
+}
+
+.gallery-visual--kitchen {
+  background: linear-gradient(145deg, #79736B, #343B37);
+}
+
+.gallery-visual--quay {
+  background: linear-gradient(145deg, #66848A, #394F52);
+}
+
+.gallery-visual--gold {
+  background: linear-gradient(145deg, #C39A5C, #755537);
+}
+
+.gallery-visual--evening {
+  background: linear-gradient(145deg, #554A5E, variables.$color-primary-hover);
+}
+
+.gallery-cta {
+  padding: 3rem 0;
+  color: variables.$color-surface;
+  background-color: variables.$color-primary;
+}
+
+.gallery-cta__content {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.gallery-cta .section-eyebrow {
+  color: variables.$color-border;
+}
+
+.gallery-cta h2 {
+  margin-bottom: 0.75rem;
+}
+
+.gallery-cta p:last-child {
+  max-width: 620px;
+  margin: 0;
+}
+
+.gallery-cta .btn {
+  width: 100%;
+}
+
+.gallery-modal .modal-content {
+  overflow: hidden;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background-color: variables.$color-surface;
+}
+
+.gallery-modal .modal-header,
+.gallery-modal .modal-footer {
+  border-color: variables.$color-border;
+}
+
+.gallery-modal .modal-title {
+  font-family: variables.$font-heading;
+  font-size: 1.75rem;
+}
+
+.gallery-modal__category {
+  margin-bottom: 0.25rem;
+}
+
+.gallery-modal__visual {
+  min-height: min(58vh, 520px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gallery-card:hover .gallery-card__visual {
+    transform: scale(1.03);
+  }
+
+  .gallery-card:hover h2 {
+    color: variables.$color-primary;
+  }
+}
+
+@media (min-width: 360px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 576px) {
+  .gallery-card__content {
+    padding: 1.25rem;
+  }
+
+  .gallery-cta__content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .gallery-cta .btn {
+    width: auto;
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .gallery-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-card__visual {
+    transition: none;
+  }
+}
