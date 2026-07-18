@@ -1,0 +1,304 @@
+@use '../abstracts/variables' as variables;
+
+.menu-page {
+  flex: 1;
+}
+
+.menu-intro {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(183, 121, 62, 0.14), transparent 28%),
+    variables.$color-background;
+  text-align: center;
+}
+
+.menu-intro__content {
+  max-width: 780px;
+}
+
+.menu-intro h1 {
+  margin-bottom: 1rem;
+}
+
+.menu-intro__content > p:not(.section-eyebrow) {
+  max-width: 680px;
+  margin-right: auto;
+  margin-left: auto;
+  color: variables.$color-text-muted;
+  font-size: 1.05rem;
+}
+
+.menu-anchor-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.menu-anchor-nav a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  color: variables.$color-primary;
+  background-color: variables.$color-surface;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.menu-anchor-nav a:hover,
+.menu-anchor-nav a:focus {
+  border-color: variables.$color-primary;
+  color: variables.$color-surface;
+  background-color: variables.$color-primary;
+}
+
+.menu-card-section {
+  background-color: variables.$color-surface;
+}
+
+.menu-section-heading {
+  max-width: 680px;
+  margin-bottom: 2.5rem;
+}
+
+.menu-section-heading h2 {
+  margin-bottom: 1rem;
+}
+
+.menu-section-heading > p:last-child:not(.section-eyebrow) {
+  color: variables.$color-text-muted;
+}
+
+.menu-category,
+.restaurant-menus {
+  scroll-margin-top: 7rem;
+}
+
+.menu-category + .menu-category {
+  margin-top: 4rem;
+  padding-top: 4rem;
+  border-top: 1px solid variables.$color-border;
+}
+
+.menu-category__heading {
+  max-width: 680px;
+  margin-bottom: 1.75rem;
+}
+
+.menu-category__heading h3 {
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+}
+
+.menu-category__heading p {
+  margin: 0;
+  color: variables.$color-text-muted;
+}
+
+.menu-dish-grid,
+.restaurant-menu-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+.menu-dish-card,
+.restaurant-menu-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background-color: variables.$color-surface;
+  box-shadow: 0 2px 12px rgba(31, 35, 33, 0.08);
+}
+
+.menu-dish-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-dish-card__visual {
+  min-height: 210px;
+  border-radius: 0;
+}
+
+.menu-dish-card__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: start;
+  padding: 1.25rem;
+}
+
+.menu-dish-card__heading {
+  display: flex;
+  width: 100%;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.menu-dish-card h4 {
+  overflow-wrap: anywhere;
+  margin-bottom: 0.75rem;
+  font-family: variables.$font-heading;
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.menu-dish-card__price {
+  flex: 0 0 auto;
+  margin-bottom: 0.75rem;
+  color: variables.$color-primary;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.menu-dish-card__description,
+.restaurant-menu-card__description {
+  margin: 0;
+  color: variables.$color-text-muted;
+}
+
+.menu-badge {
+  display: inline-flex;
+  margin-bottom: 0.75rem;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-sm;
+  color: variables.$color-primary;
+  background-color: variables.$color-background;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.menu-visual--mushroom {
+  background: linear-gradient(145deg, #9D9179, variables.$color-primary-hover);
+}
+
+.menu-visual--trout {
+  background: linear-gradient(145deg, #BE8874, #4B6D68);
+}
+
+.menu-visual--vegetable {
+  background: linear-gradient(145deg, #B8A25F, variables.$color-primary);
+}
+
+.menu-visual--salmon {
+  background: linear-gradient(145deg, #C88C68, variables.$color-primary);
+}
+
+.menu-visual--forest {
+  background: linear-gradient(145deg, #A79B72, variables.$color-primary-hover);
+}
+
+.menu-visual--butcher {
+  background: linear-gradient(145deg, #865B4D, #3D332E);
+}
+
+.menu-visual--chef-dessert {
+  background: linear-gradient(145deg, variables.$color-accent, #6D3F32);
+}
+
+.menu-visual--apple {
+  background: linear-gradient(145deg, #BF8B58, #75603A);
+}
+
+.menu-visual--vanilla {
+  background: linear-gradient(145deg, #C8B98C, #746A52);
+}
+
+.restaurant-menus {
+  background-color: variables.$color-background;
+}
+
+.restaurant-menu-card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 1.5rem;
+}
+
+.restaurant-menu-card h3 {
+  margin-bottom: 0.75rem;
+}
+
+.restaurant-menu-card__composition {
+  width: 100%;
+  margin: 1.5rem 0;
+  padding: 1.25rem 0 0 1.25rem;
+  border-top: 1px solid variables.$color-border;
+}
+
+.restaurant-menu-card__composition li + li {
+  margin-top: 0.5rem;
+}
+
+.restaurant-menu-card__price {
+  margin: auto 0 0;
+  color: variables.$color-primary;
+  font-family: variables.$font-heading;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.menu-cta {
+  padding: 3rem 0;
+  color: variables.$color-surface;
+  background-color: variables.$color-primary;
+}
+
+.menu-cta__content {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.menu-cta .section-eyebrow {
+  color: variables.$color-border;
+}
+
+.menu-cta h2 {
+  margin-bottom: 0.75rem;
+}
+
+.menu-cta p:last-child {
+  max-width: 620px;
+  margin: 0;
+}
+
+.menu-cta .btn {
+  width: 100%;
+}
+
+@media (min-width: 576px) {
+  .menu-cta__content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .menu-cta .btn {
+    width: auto;
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 768px) {
+  .menu-dish-grid,
+  .restaurant-menu-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .menu-dish-grid,
+  .restaurant-menu-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
