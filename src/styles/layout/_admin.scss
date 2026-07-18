@@ -1,0 +1,116 @@
+@use '../abstracts/variables' as variables;
+
+.admin-shell {
+  min-height: 100vh;
+  color: variables.$color-text;
+  background: variables.$color-background;
+}
+
+.admin-skip-link {
+  position: fixed;
+  z-index: 1100;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.75rem 1rem;
+  transform: translateY(-150%);
+  border-radius: variables.$radius-sm;
+  color: variables.$color-surface;
+  background: variables.$color-primary;
+}
+
+.admin-skip-link:focus { transform: translateY(0); }
+
+.admin-header {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid variables.$color-border;
+  background: variables.$color-surface;
+}
+
+.admin-header__brand { display: flex; min-width: 0; flex-direction: column; }
+.admin-header__name { color: variables.$color-primary; font-weight: 700; }
+.admin-header__caption { color: variables.$color-text-muted; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.admin-header__actions { display: flex; align-items: center; gap: 0.75rem; }
+.admin-header__user { display: none; color: variables.$color-text-muted; font-size: 0.875rem; }
+
+.admin-header__menu-button {
+  min-height: 44px;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid variables.$color-primary;
+  border-radius: variables.$radius-md;
+  color: variables.$color-primary;
+  background: variables.$color-surface;
+  font-weight: 600;
+}
+
+.admin-header__menu-button:hover,
+.admin-header__menu-button:focus { color: variables.$color-surface; background: variables.$color-primary; }
+
+.admin-shell__body { min-width: 0; }
+.admin-sidebar { display: none; }
+
+.admin-main {
+  min-width: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.admin-main:focus { outline: none; }
+.admin-main:focus-visible { outline: 3px solid variables.$color-primary; outline-offset: -3px; }
+
+.admin-nav__list { display: grid; gap: 0.35rem; margin: 0; padding: 0; list-style: none; }
+.admin-nav__site-link { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.2); }
+
+.admin-nav__link {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 0.65rem 0.85rem;
+  border-radius: variables.$radius-sm;
+  color: variables.$color-surface;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.admin-nav__link:hover,
+.admin-nav__link:focus,
+.admin-nav__link--active {
+  color: variables.$color-primary-hover;
+  background: variables.$color-background;
+}
+
+.admin-nav__link--active { border-left: 4px solid variables.$color-accent; font-weight: 700; }
+
+.admin-offcanvas { max-width: min(88vw, 320px); color: variables.$color-surface; background: variables.$color-primary-hover; }
+.admin-offcanvas .offcanvas-header { border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+.admin-offcanvas .offcanvas-title { font-family: variables.$font-body; font-size: 1.25rem; }
+
+@media (min-width: 576px) {
+  .admin-header { padding-right: 1.5rem; padding-left: 1.5rem; }
+  .admin-header__user { display: inline; }
+  .admin-main { padding-right: 1.5rem; padding-left: 1.5rem; }
+}
+
+@media (min-width: 992px) {
+  .admin-header { position: sticky; top: 0; min-height: 80px; padding-right: 2rem; padding-left: 2rem; }
+  .admin-header__menu-button { display: none; }
+  .admin-shell__body { display: grid; grid-template-columns: 250px minmax(0, 1fr); }
+  .admin-sidebar {
+    position: sticky;
+    top: 80px;
+    display: block;
+    height: calc(100vh - 80px);
+    align-self: start;
+    padding: 1.5rem 1rem;
+    overflow-y: auto;
+    background: variables.$color-primary-hover;
+  }
+  .admin-main { width: 100%; padding: 3rem 2rem 5rem; }
+}

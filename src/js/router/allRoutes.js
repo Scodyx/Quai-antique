@@ -1,5 +1,8 @@
 import { GalleryPage } from '../pages/GalleryPage.js';
 import { AccountPage, initAccountPage } from '../pages/AccountPage.js';
+import { initAdminLayout } from '../components/admin/AdminLayout.js';
+import { AdminDashboardPage } from '../pages/AdminDashboardPage.js';
+import { createAdminPlaceholderPage } from '../pages/AdminPlaceholderPage.js';
 import { HomePage } from '../pages/HomePage.js';
 import { initLoginPage, LoginPage } from '../pages/LoginPage.js';
 import { MenuPage } from '../pages/MenuPage.js';
@@ -16,5 +19,10 @@ export const allRoutes = [
   new Route('/connexion', LoginPage, initLoginPage),
   new Route('/inscription', SignupPage, initSignupPage),
   new Route('/mon-compte', AccountPage, initAccountPage),
+  new Route('/administration', AdminDashboardPage, initAdminLayout),
+  new Route('/administration/reservations', createAdminPlaceholderPage('Gestion des réservations'), initAdminLayout),
+  new Route('/administration/horaires-capacite', createAdminPlaceholderPage('Horaires et capacité'), initAdminLayout),
+  new Route('/administration/galerie', createAdminPlaceholderPage('Gestion de la galerie'), initAdminLayout),
+  new Route('/administration/carte-et-menus', createAdminPlaceholderPage('Gestion de la carte et des menus'), initAdminLayout),
   new Route('*', NotFoundPage),
 ];

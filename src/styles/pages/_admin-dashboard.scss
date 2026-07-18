@@ -1,0 +1,124 @@
+@use '../abstracts/variables' as variables;
+
+.admin-page-heading { max-width: 780px; margin-bottom: 2.5rem; }
+.admin-page-heading h1,
+.admin-dashboard-section h2,
+.admin-service h3,
+.admin-placeholder h1 { font-family: variables.$font-body; }
+.admin-page-heading h1 { margin-bottom: 1rem; font-size: clamp(2.25rem, 5vw, 3.25rem); }
+.admin-page-heading > p:last-child { color: variables.$color-text-muted; }
+
+.admin-eyebrow { margin-bottom: 0.5rem; color: variables.$color-accent; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.admin-dashboard-section {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background: variables.$color-surface;
+  box-shadow: 0 2px 12px rgba(31, 35, 33, 0.05);
+}
+
+.admin-dashboard-section > h2,
+.admin-section-heading h2 { margin-bottom: 1.25rem; font-size: clamp(1.5rem, 4vw, 2rem); }
+
+.admin-indicator-grid,
+.admin-service-grid,
+.admin-shortcut-grid { display: grid; gap: 1rem; }
+
+.admin-indicator {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background: variables.$color-background;
+}
+
+.admin-indicator__label { margin-bottom: 0.5rem; font-weight: 600; }
+.admin-indicator__value { margin-bottom: 0.35rem; color: variables.$color-primary; font-size: 2rem; font-weight: 700; line-height: 1; }
+.admin-indicator__detail { margin: 0; color: variables.$color-text-muted; font-size: 0.875rem; }
+
+.admin-section-heading { display: flex; flex-direction: column; align-items: start; gap: 0.75rem; margin-bottom: 1.25rem; }
+.admin-section-heading h2 { margin-bottom: 0.25rem; }
+.admin-section-heading p { margin: 0; color: variables.$color-text-muted; }
+.admin-section-heading a { color: variables.$color-primary; font-weight: 600; text-underline-offset: 0.2rem; }
+
+.admin-service { padding: 1rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-md; }
+.admin-service--closed { border-style: dashed; background: variables.$color-background; }
+.admin-service--closed p { margin: 0; color: variables.$color-text-muted; }
+.admin-service h3 { margin-bottom: 0.25rem; font-size: 1.2rem; }
+.admin-service > div > p { color: variables.$color-text-muted; }
+.admin-service dl { margin: 0; }
+.admin-service dl > div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.5rem 0; border-top: 1px solid variables.$color-border; }
+.admin-service dd { margin: 0; font-weight: 700; }
+
+.admin-empty-state { margin: 0; padding: 1rem; border: 1px dashed variables.$color-border; border-radius: variables.$radius-md; color: variables.$color-text-muted; }
+
+.admin-reservation-list { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+.admin-reservation { min-width: 0; padding: 1rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-md; }
+.admin-reservation__primary { display: flex; flex-direction: column; gap: 0.2rem; padding-bottom: 0.75rem; }
+.admin-reservation__primary strong { color: variables.$color-primary; font-size: 1.15rem; }
+.admin-reservation__details { display: grid; gap: 0; margin: 0; }
+.admin-reservation__details > div { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 0.75rem; padding: 0.55rem 0; border-top: 1px solid variables.$color-border; }
+.admin-reservation__details dt { font-weight: 600; }
+.admin-reservation__details dd { overflow-wrap: anywhere; margin: 0; color: variables.$color-text-muted; text-align: right; }
+
+.admin-status { display: inline-flex; padding: 0.2rem 0.45rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-sm; color: variables.$color-text; font-size: 0.8rem; font-weight: 700; }
+.admin-status--confirmed { border-color: variables.$color-success; }
+.admin-status--pending { border-style: dashed; border-color: variables.$color-accent; }
+
+.admin-shortcut {
+  display: flex;
+  min-height: 112px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  color: variables.$color-text;
+  background: variables.$color-background;
+  text-decoration: none;
+}
+
+.admin-shortcut strong { color: variables.$color-primary; }
+.admin-shortcut span { margin-top: 0.35rem; color: variables.$color-text-muted; }
+.admin-shortcut:hover,
+.admin-shortcut:focus { border-color: variables.$color-primary; background: variables.$color-surface; box-shadow: 0 2px 12px rgba(31, 35, 33, 0.08); }
+
+.admin-placeholder {
+  max-width: 760px;
+  padding: 1.25rem;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background: variables.$color-surface;
+  box-shadow: 0 2px 12px rgba(31, 35, 33, 0.05);
+}
+
+.admin-placeholder h1 { margin-bottom: 1rem; font-size: clamp(2rem, 5vw, 3rem); }
+.admin-placeholder > p:not(.admin-eyebrow) { margin-bottom: 1.5rem; color: variables.$color-text-muted; }
+.admin-placeholder .btn { width: 100%; }
+
+@media (min-width: 390px) {
+  .admin-indicator-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 576px) {
+  .admin-dashboard-section,
+  .admin-placeholder { padding: 1.5rem; }
+  .admin-section-heading { flex-direction: row; align-items: end; justify-content: space-between; }
+  .admin-service-grid,
+  .admin-shortcut-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-placeholder .btn { width: auto; }
+}
+
+@media (min-width: 768px) {
+  .admin-reservation__primary { flex-direction: row; justify-content: space-between; }
+  .admin-reservation__details { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .admin-reservation__details > div { display: block; padding: 0.75rem; border-top: 1px solid variables.$color-border; border-left: 1px solid variables.$color-border; }
+  .admin-reservation__details > div:first-child { border-left: 0; }
+  .admin-reservation__details dd { margin-top: 0.35rem; text-align: left; }
+}
+
+@media (min-width: 1200px) {
+  .admin-indicator-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
