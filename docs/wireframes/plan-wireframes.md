@@ -661,3 +661,17 @@ Les fenêtres de confirmation ou de suppression et les messages de succès ou d�
 | 12 | Gestion administrative des réservations | Oui, représentative | Oui | Liste administrative en cartes sur mobile |
 
 La production prévue conserve douze types de planches principales. Leurs versions responsive représentent huit versions mobiles publiques ou clientes, huit versions ordinateur correspondantes, quatre versions ordinateur administratives et deux versions mobiles administratives représentatives, soit vingt-deux déclinaisons au total. Les variantes et annotations ne sont pas comptées comme des planches complètes.
+
+## Ressources Figma
+
+- Fichier Figma en ligne :
+  <https://www.figma.com/design/hMczMvggW1B7HLG5cEpOso/Quai-Antique-%E2%80%94-Wireframes?node-id=1-2588&t=2P0tthzFkwmA6xvh-1>
+- Sauvegarde locale :
+  `docs/wireframes/Source/quai-antique-wireframes.fig`
+- Pages présentes dans Figma :
+  - 01 - Public
+  - 02 - Client
+  - 03 - Administration
+  - 04 - Variantes
+
+Les wireframes comprennent des versions Desktop et Mobile ainsi que les principales interactions de navigation.
