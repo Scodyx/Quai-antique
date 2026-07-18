@@ -8,6 +8,7 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
+  overflow-x: hidden;
   color: variables.$color-text;
   background-color: variables.$color-background;
 }
@@ -26,6 +27,19 @@ a:focus-visible,
 button:focus-visible {
   outline: 3px solid variables.$color-primary;
   outline-offset: 2px;
+}
+
+.temporary-page {
+  display: grid;
+  flex: 1;
+  min-height: 60vh;
+  padding: 4rem 0;
+  place-items: center;
+}
+
+.temporary-page p,
+.not-found p {
+  color: variables.$color-text-muted;
 }
 
 .not-found {

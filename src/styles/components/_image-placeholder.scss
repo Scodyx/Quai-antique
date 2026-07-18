@@ -1,0 +1,103 @@
+@use '../abstracts/variables' as variables;
+
+.image-placeholder {
+  position: relative;
+  overflow: hidden;
+  border-radius: variables.$radius-md;
+  background:
+    radial-gradient(circle at 78% 22%, rgba(255, 255, 255, 0.45) 0 8%, transparent 9%),
+    linear-gradient(135deg, variables.$color-primary 0%, variables.$color-accent 100%);
+  isolation: isolate;
+}
+
+.image-placeholder::before,
+.image-placeholder::after {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  content: '';
+}
+
+.image-placeholder::before {
+  width: 11rem;
+  height: 11rem;
+  right: -3rem;
+  bottom: -4rem;
+}
+
+.image-placeholder::after {
+  width: 6rem;
+  height: 6rem;
+  top: -2rem;
+  left: -2rem;
+}
+
+.image-placeholder__label {
+  position: absolute;
+  z-index: 1;
+  right: 1rem;
+  bottom: 1rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: variables.$radius-sm;
+  color: variables.$color-surface;
+  background-color: rgba(31, 35, 33, 0.72);
+  font-size: 0.875rem;
+}
+
+.image-placeholder--hero {
+  min-height: 320px;
+}
+
+.image-placeholder--portrait {
+  min-height: 360px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(247, 243, 236, 0.5) 0 18%, transparent 19%),
+    linear-gradient(150deg, variables.$color-accent, variables.$color-primary-hover);
+}
+
+.image-placeholder--dish {
+  min-height: 220px;
+  border-radius: 0;
+}
+
+.image-placeholder--salmon {
+  background: linear-gradient(145deg, #C88C68, variables.$color-primary);
+}
+
+.image-placeholder--risotto {
+  background: linear-gradient(145deg, #A79B72, variables.$color-primary-hover);
+}
+
+.image-placeholder--dessert {
+  background: linear-gradient(145deg, variables.$color-accent, #6D3F32);
+}
+
+.image-placeholder--gallery {
+  min-height: 180px;
+}
+
+.image-placeholder--gallery-one {
+  background: linear-gradient(135deg, #B88B67, variables.$color-primary);
+}
+
+.image-placeholder--gallery-two {
+  background: linear-gradient(135deg, variables.$color-primary-hover, #85917D);
+}
+
+.image-placeholder--gallery-three {
+  background: linear-gradient(135deg, #7E5E48, variables.$color-accent);
+}
+
+.image-placeholder--gallery-four {
+  background: linear-gradient(135deg, #9C7F76, variables.$color-primary);
+}
+
+@media (min-width: 768px) {
+  .image-placeholder--hero {
+    min-height: 440px;
+  }
+
+  .image-placeholder--gallery {
+    min-height: 240px;
+  }
+}

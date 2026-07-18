@@ -1,0 +1,47 @@
+@use '../abstracts/variables' as variables;
+
+.dish-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.dish-card {
+  overflow: hidden;
+  border: 1px solid variables.$color-border;
+  border-radius: variables.$radius-md;
+  background-color: variables.$color-surface;
+  box-shadow: 0 2px 12px rgba(31, 35, 33, 0.08);
+}
+
+.dish-card__body {
+  padding: 1.25rem;
+}
+
+.dish-card__heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dish-card__heading h3,
+.dish-card__price {
+  margin-bottom: 0.75rem;
+}
+
+.dish-card__price {
+  flex: 0 0 auto;
+  color: variables.$color-primary;
+  font-weight: 600;
+}
+
+.dish-card__body > p:last-child {
+  margin: 0;
+  color: variables.$color-text-muted;
+}
+
+@media (min-width: 992px) {
+  .dish-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

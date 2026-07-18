@@ -18,3 +18,31 @@
     background-color: variables.$color-primary-hover;
   }
 }
+
+.btn-secondary {
+  border-color: variables.$color-primary;
+  color: variables.$color-primary;
+  background-color: transparent;
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: variables.$color-primary;
+    color: variables.$color-surface;
+    background-color: variables.$color-primary;
+  }
+}
+
+.btn-light {
+  border-color: variables.$color-surface;
+  color: variables.$color-primary-hover;
+  background-color: variables.$color-surface;
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: variables.$color-background;
+    color: variables.$color-primary-hover;
+    background-color: variables.$color-background;
+  }
+}

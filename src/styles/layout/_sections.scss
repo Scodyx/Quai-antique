@@ -1,0 +1,56 @@
+@use '../abstracts/variables' as variables;
+
+.section {
+  padding: 4rem 0;
+}
+
+.section--surface {
+  background-color: variables.$color-surface;
+}
+
+.section-heading {
+  max-width: 680px;
+  margin-bottom: 2rem;
+}
+
+.section-heading h2 {
+  margin-bottom: 1rem;
+}
+
+.section-heading > p:last-child,
+.section-heading--row p {
+  color: variables.$color-text-muted;
+}
+
+.section-heading--row {
+  display: flex;
+  max-width: none;
+  flex-direction: column;
+  align-items: start;
+  gap: 1rem;
+}
+
+.section-eyebrow {
+  margin-bottom: 0.75rem;
+  color: variables.$color-accent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 5rem 0;
+  }
+
+  .section-heading {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading--row {
+    flex-direction: row;
+    align-items: end;
+    justify-content: space-between;
+  }
+}

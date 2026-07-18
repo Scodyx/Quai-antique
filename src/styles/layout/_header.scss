@@ -1,20 +1,86 @@
 @use '../abstracts/variables' as variables;
 
 .site-header {
+  position: relative;
+  z-index: 10;
   border-bottom: 1px solid variables.$color-border;
   background-color: variables.$color-surface;
 }
 
+.site-header .navbar {
+  min-height: 76px;
+  padding: 0.5rem 0;
+}
+
 .site-header__brand {
+  display: inline-flex;
+  flex-direction: column;
   color: variables.$color-primary;
-  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.site-header__brand:hover,
+.site-header__brand:focus {
+  color: variables.$color-primary-hover;
+}
+
+.site-header__brand-name {
+  font-family: variables.$font-heading;
+  font-size: 1.65rem;
+  font-weight: 700;
+}
+
+.site-header__brand-caption {
+  margin-top: 0.25rem;
+  font-family: variables.$font-body;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.site-header .navbar-toggler {
+  min-width: 44px;
+  min-height: 44px;
+  border-color: variables.$color-border;
+}
+
+.site-header .navbar-collapse {
+  padding-top: 0.75rem;
 }
 
 .site-header .nav-link {
+  position: relative;
+  padding: 0.75rem;
   color: variables.$color-text;
+  font-weight: 500;
+}
 
-  &:hover,
-  &.active {
-    color: variables.$color-primary;
+.site-header .nav-link:hover,
+.site-header .nav-link.active {
+  color: variables.$color-primary;
+}
+
+.site-header .nav-link.active {
+  font-weight: 600;
+}
+
+.site-header .nav-link.active::after {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.35rem;
+  left: 0.75rem;
+  height: 2px;
+  background-color: variables.$color-accent;
+  content: '';
+}
+
+@media (min-width: 992px) {
+  .site-header .navbar {
+    min-height: 88px;
+  }
+
+  .site-header .navbar-collapse {
+    padding-top: 0;
   }
 }

@@ -1,10 +1,34 @@
 export function Header() {
+  const currentPath = window.location.pathname;
+  const navigationLinks = [
+    { label: 'Accueil', path: '/' },
+    { label: 'Galerie', path: '/galerie' },
+    { label: 'Carte et menus', path: '/carte-et-menus' },
+    { label: 'Réservation', path: '/reservation' },
+    { label: 'Connexion', path: '/connexion' },
+  ];
+
+  const navigationItems = navigationLinks
+    .map(({ label, path }) => {
+      const isActive = currentPath === path;
+      const activeClass = isActive ? ' active' : '';
+      const ariaCurrent = isActive ? ' aria-current="page"' : '';
+
+      return `
+        <li class="nav-item">
+          <a class="nav-link${activeClass}" href="${path}" data-link${ariaCurrent}>${label}</a>
+        </li>
+      `;
+    })
+    .join('');
+
   return `
     <header class="site-header">
       <nav class="navbar navbar-expand-lg" aria-label="Navigation principale">
         <div class="container site-container">
           <a class="navbar-brand site-header__brand" href="/" data-link>
-            Quai Antique
+            <span class="site-header__brand-name">Quai Antique</span>
+            <span class="site-header__brand-caption">Restaurant</span>
           </a>
 
           <button
@@ -21,21 +45,7 @@ export function Header() {
 
           <div class="collapse navbar-collapse" id="main-navigation">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-              <li class="nav-item">
-                <a class="nav-link active" href="/" data-link aria-current="page">Accueil</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Galerie</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Carte et menus</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Réservation</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Connexion</a>
-              </li>
+              ${navigationItems}
             </ul>
           </div>
         </div>

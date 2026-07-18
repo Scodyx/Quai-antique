@@ -1,29 +1,131 @@
 @use '../abstracts/variables' as variables;
 
-.home-hero {
-  display: grid;
+.home-page {
   flex: 1;
-  min-height: 65vh;
-  padding: 4rem 0;
-  place-items: center;
-  text-align: center;
+}
+
+.home-hero {
+  background:
+    radial-gradient(circle at 10% 15%, rgba(183, 121, 62, 0.12), transparent 28%),
+    variables.$color-background;
+}
+
+.home-hero__layout,
+.home-house,
+.home-hours {
+  display: grid;
+  gap: 2rem;
 }
 
 .home-hero__content {
-  max-width: 760px;
-}
-
-.home-hero__eyebrow {
-  margin-bottom: 1rem;
-  color: variables.$color-accent;
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  align-self: center;
 }
 
 .home-hero__intro {
   max-width: 620px;
-  margin: 1.5rem auto;
+  margin: 1.5rem 0;
   color: variables.$color-text-muted;
+  font-size: 1.05rem;
+}
+
+.home-hero .btn,
+.home-house .btn,
+.section-heading--row .btn,
+.home-cta .btn {
+  width: 100%;
+}
+
+.home-house__content {
+  align-self: center;
+}
+
+.home-house__content > p:not(.section-eyebrow) {
+  color: variables.$color-text-muted;
+}
+
+.gallery-preview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.home-cta {
+  padding: 3rem 0;
+  color: variables.$color-surface;
+  background-color: variables.$color-primary;
+}
+
+.home-cta__content {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.home-cta h2 {
+  margin: 0;
+}
+
+.home-hours__intro > p:last-child {
+  color: variables.$color-text-muted;
+}
+
+.hours-list {
+  margin: 0;
+  border-top: 1px solid variables.$color-border;
+}
+
+.hours-list__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid variables.$color-border;
+}
+
+.hours-list__row dt {
+  font-weight: 600;
+}
+
+.hours-list__row dd {
+  margin: 0;
+  color: variables.$color-text-muted;
+  text-align: right;
+}
+
+@media (min-width: 576px) {
+  .home-hero .btn,
+  .home-house .btn,
+  .section-heading--row .btn,
+  .home-cta .btn {
+    width: auto;
+  }
+
+  .home-cta__content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 768px) {
+  .home-hero__layout,
+  .home-house,
+  .home-hours {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .gallery-preview {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .home-hero__layout,
+  .home-house,
+  .home-hours {
+    gap: 5rem;
+  }
 }
