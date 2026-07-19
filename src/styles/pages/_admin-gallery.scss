@@ -1,0 +1,108 @@
+@use '../abstracts/variables' as variables;
+
+.admin-gallery-intro { display: flex; max-width: 1000px; flex-direction: column; align-items: start; gap: 1rem; margin-bottom: 1.5rem; }
+.admin-gallery-intro h1 { margin-bottom: 1rem; font-family: variables.$font-body; font-size: clamp(2.1rem, 5vw, 3.1rem); }
+.admin-gallery-intro p:last-child { color: variables.$color-text-muted; }
+.admin-gallery-intro .btn { width: 100%; }
+.admin-gallery-live { margin-bottom: 1rem; border-color: variables.$color-success; }
+
+.admin-gallery-indicators { display: grid; gap: 1rem; }
+.admin-gallery-indicator { display: flex; min-width: 0; flex-direction: column; padding: 1rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-md; background: variables.$color-surface; box-shadow: 0 2px 12px rgba(31, 35, 33, 0.05); }
+.admin-gallery-indicator p { margin-bottom: 0.4rem; font-weight: 600; }
+.admin-gallery-indicator strong { color: variables.$color-primary; font-size: 2rem; line-height: 1; }
+.admin-gallery-indicator span { margin-top: 0.5rem; color: variables.$color-text-muted; font-size: 0.8rem; }
+
+.admin-gallery-filters,
+.admin-gallery-results { margin-top: 1.5rem; padding: 1.25rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-md; background: variables.$color-surface; box-shadow: 0 2px 12px rgba(31, 35, 33, 0.05); }
+.admin-gallery-filters h2,
+.admin-gallery-results h2 { margin-bottom: 1.25rem; font-family: variables.$font-body; font-size: clamp(1.4rem, 4vw, 1.9rem); }
+.admin-gallery-filter-grid { display: grid; gap: 1rem; }
+
+.admin-gallery-field { min-width: 0; }
+.admin-gallery-field label { display: block; margin-bottom: 0.45rem; font-size: 0.875rem; font-weight: 600; }
+.admin-gallery-field .form-control,
+.admin-gallery-field .form-select { width: 100%; min-width: 0; min-height: 44px; border-color: variables.$color-border; border-radius: variables.$radius-sm; color: variables.$color-text; background: variables.$color-surface; }
+.admin-gallery-field textarea.form-control { min-height: 100px; }
+.admin-gallery-field input[type='file'] { overflow: hidden; }
+.admin-gallery-field .form-control:focus,
+.admin-gallery-field .form-select:focus { border-color: variables.$color-primary; box-shadow: 0 0 0 0.2rem rgba(47, 74, 58, 0.18); }
+.admin-gallery-field .is-invalid { border-color: variables.$color-error; background-image: none; }
+.admin-gallery-help { margin: 0.45rem 0 0; color: variables.$color-text-muted; font-size: 0.875rem; }
+.admin-gallery-error { min-height: 1.2rem; margin: 0.3rem 0 0; color: variables.$color-error; font-size: 0.875rem; font-weight: 600; }
+
+.admin-gallery-reset { width: 100%; border: 0; color: variables.$color-primary; background: transparent; text-decoration: underline; text-underline-offset: 0.2rem; }
+.admin-gallery-reset:hover,
+.admin-gallery-reset:focus { color: variables.$color-primary-hover; background: variables.$color-background; }
+.admin-gallery-results__heading p { margin: -0.75rem 0 1.25rem; color: variables.$color-text-muted; }
+.admin-gallery-grid { display: grid; gap: 1rem; }
+
+.admin-gallery-card { min-width: 0; overflow: hidden; border: 1px solid variables.$color-border; border-radius: variables.$radius-md; background: variables.$color-background; }
+.admin-gallery-card--hidden { border-style: dashed; }
+.admin-gallery-card--hidden::before { position: absolute; }
+.admin-gallery-card__visual { display: block; width: 100%; min-height: 210px; aspect-ratio: 4 / 3; border: 0; border-radius: 0; object-fit: cover; }
+.admin-gallery-card__body { padding: 1rem; }
+.admin-gallery-card__heading { display: flex; flex-direction: column; align-items: start; gap: 0.65rem; }
+.admin-gallery-card__heading h2 { overflow-wrap: anywhere; margin: 0; font-family: variables.$font-body; font-size: 1.15rem; }
+.admin-gallery-status { display: inline-flex; padding: 0.2rem 0.5rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-sm; font-size: 0.8rem; font-weight: 700; }
+.admin-gallery-status--published { border-color: variables.$color-success; }
+.admin-gallery-status--hidden { border-style: dashed; border-color: variables.$color-error; }
+.admin-gallery-card__category { display: inline-flex; margin: 0.75rem 0; padding: 0.2rem 0.5rem; border-radius: variables.$radius-sm; color: variables.$color-primary; background: variables.$color-surface; font-size: 0.8rem; font-weight: 700; }
+.admin-gallery-card__alt,
+.admin-gallery-card__file { overflow-wrap: anywhere; color: variables.$color-text-muted; font-size: 0.875rem; }
+.admin-gallery-card__order { padding-top: 0.75rem; border-top: 1px solid variables.$color-border; font-weight: 600; }
+.admin-gallery-card__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+.admin-gallery-card__actions .btn { width: 100%; min-width: 0; padding-right: 0.5rem; padding-left: 0.5rem; }
+.admin-gallery-order-button { border: 1px solid variables.$color-border; color: variables.$color-primary; background: variables.$color-surface; }
+.admin-gallery-order-button:hover:not(:disabled),
+.admin-gallery-order-button:focus:not(:disabled) { color: variables.$color-surface; background: variables.$color-primary; }
+.admin-gallery-delete-button { grid-column: 1 / -1; border: 1px solid variables.$color-error; color: variables.$color-error; background: transparent; }
+.admin-gallery-delete-button:hover,
+.admin-gallery-delete-button:focus { color: variables.$color-surface; background: variables.$color-error; }
+.admin-gallery-empty { margin: 0; padding: 1.5rem; border: 1px dashed variables.$color-border; border-radius: variables.$radius-md; color: variables.$color-text-muted; background: variables.$color-background; text-align: center; }
+
+.admin-gallery-modal .modal-content { border: 1px solid variables.$color-border; border-radius: variables.$radius-md; }
+.admin-gallery-modal .modal-header,
+.admin-gallery-modal .modal-footer { border-color: variables.$color-border; }
+.admin-gallery-modal .modal-title { font-family: variables.$font-body; font-size: 1.35rem; }
+.admin-gallery-form-grid { display: grid; gap: 1rem; }
+.admin-gallery-publish { display: flex; min-height: 44px; align-items: center; gap: 0.55rem; padding-left: 0; }
+.admin-gallery-publish .form-check-input { width: 2.5rem; min-width: 2.5rem; height: 1.35rem; margin: 0; float: none; }
+.admin-gallery-publish .form-check-input:checked { border-color: variables.$color-primary; background-color: variables.$color-primary; }
+.admin-gallery-preview { min-width: 0; min-height: 180px; overflow: hidden; padding: 1rem; border: 1px dashed variables.$color-border; border-radius: variables.$radius-md; background: variables.$color-background; }
+.admin-gallery-preview img,
+.admin-gallery-preview__visual { display: block; width: 100%; max-height: 360px; min-height: 200px; border-radius: variables.$radius-sm; object-fit: cover; }
+.admin-gallery-preview p { overflow-wrap: anywhere; margin: 0.75rem 0 0; color: variables.$color-text-muted; font-size: 0.875rem; }
+.admin-gallery-delete-summary { margin: 1rem 0 0; }
+.admin-gallery-delete-summary > div { display: grid; grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr); gap: 1rem; padding: 0.6rem 0; border-top: 1px solid variables.$color-border; }
+.admin-gallery-delete-summary dt { font-weight: 600; }
+.admin-gallery-delete-summary dd { overflow-wrap: anywhere; margin: 0; color: variables.$color-text-muted; text-align: right; }
+
+@media (min-width: 390px) {
+  .admin-gallery-indicators { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 576px) {
+  .admin-gallery-intro { flex-direction: row; align-items: end; justify-content: space-between; }
+  .admin-gallery-intro .btn { width: auto; flex: 0 0 auto; }
+  .admin-gallery-filters,
+  .admin-gallery-results { padding: 1.5rem; }
+  .admin-gallery-filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; }
+  .admin-gallery-reset { width: auto; justify-self: start; }
+  .admin-gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-gallery-card__heading { flex-direction: row; justify-content: space-between; }
+  .admin-gallery-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-gallery-field--full { grid-column: 1 / -1; }
+}
+
+@media (min-width: 992px) {
+  .admin-gallery-indicators { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .admin-gallery-filter-grid { grid-template-columns: 1.4fr 1fr 1fr auto; }
+}
+
+@media (min-width: 1400px) {
+  .admin-gallery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 575.98px) {
+  .admin-gallery-modal .modal-footer .btn { width: 100%; }
+}
