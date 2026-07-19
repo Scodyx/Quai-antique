@@ -1,0 +1,117 @@
+@use '../abstracts/variables' as variables;
+
+.admin-menu-intro { max-width: 850px; margin-bottom: 1.5rem; }
+.admin-menu-intro h1 { margin-bottom: 1rem; font-family: variables.$font-body; font-size: clamp(2.1rem, 5vw, 3.1rem); }
+.admin-menu-intro > p:last-child { color: variables.$color-text-muted; }
+.admin-menu-live { margin-bottom: 1rem; border-color: variables.$color-success; }
+.admin-menu-indicators { display: grid; gap: 1rem; }
+.admin-menu-indicator { display: flex; min-width: 0; flex-direction: column; padding: 1rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-md; background: variables.$color-surface; box-shadow: 0 2px 12px rgba(31,35,33,.05); }
+.admin-menu-indicator p { margin-bottom: .4rem; font-weight: 600; }
+.admin-menu-indicator strong { color: variables.$color-primary; font-size: 2rem; line-height: 1; }
+.admin-menu-indicator span { margin-top: .5rem; color: variables.$color-text-muted; font-size: .8rem; }
+
+.admin-menu-anchor-nav { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.5rem 0; }
+.admin-menu-anchor-nav a { display: inline-flex; min-height: 44px; align-items: center; padding: .55rem 1rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-md; color: variables.$color-primary; background: variables.$color-surface; font-weight: 700; text-decoration: none; }
+.admin-menu-anchor-nav a:hover,
+.admin-menu-anchor-nav a:focus { color: variables.$color-surface; background: variables.$color-primary; }
+
+.admin-menu-section { margin-top: 1.5rem; padding: 1.25rem; scroll-margin-top: 7rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-md; background: variables.$color-surface; box-shadow: 0 2px 12px rgba(31,35,33,.05); }
+.admin-menu-section-heading { display: flex; flex-direction: column; align-items: start; gap: 1rem; margin-bottom: 1.25rem; }
+.admin-menu-section-heading h2 { margin-bottom: .4rem; font-family: variables.$font-body; font-size: clamp(1.5rem,4vw,2rem); }
+.admin-menu-section-heading p { margin: 0; color: variables.$color-text-muted; }
+.admin-menu-section-heading .btn { width: 100%; }
+.admin-menu-info { padding: .75rem; border-left: 4px solid variables.$color-accent; background: variables.$color-background; }
+
+.admin-menu-category-grid,
+.admin-menu-dish-grid,
+.admin-menu-restaurant-grid { display: grid; gap: 1rem; }
+.admin-menu-category-card,
+.admin-menu-dish-card,
+.admin-menu-restaurant-card { min-width: 0; overflow: hidden; padding: 1rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-md; background: variables.$color-background; }
+.admin-menu-dish-card { padding: 0; }
+.admin-menu-card--hidden { border-style: dashed; }
+.admin-menu-card-heading { display: flex; flex-direction: column; align-items: start; gap: .6rem; }
+.admin-menu-card-heading h3 { margin: 0; font-family: variables.$font-body; font-size: 1.15rem; }
+.admin-menu-category-card > p,
+.admin-menu-restaurant-card > p:not(.admin-menu-price,.admin-menu-position,.admin-menu-badge),
+.admin-menu-card-body > p:not(.admin-menu-price,.admin-menu-position,.admin-menu-badge,.admin-menu-category-label) { color: variables.$color-text-muted; }
+.admin-menu-category-card dl { margin: 1rem 0; }
+.admin-menu-category-card dl > div { display: flex; justify-content: space-between; gap: 1rem; padding: .5rem 0; border-top: 1px solid variables.$color-border; }
+.admin-menu-category-card dd { margin: 0; }
+
+.admin-menu-status { display: inline-flex; padding: .2rem .5rem; border: 1px solid variables.$color-border; border-radius: variables.$radius-sm; font-size: .78rem; font-weight: 700; }
+.admin-menu-status--published { border-color: variables.$color-success; }
+.admin-menu-status--hidden { border-style: dashed; border-color: variables.$color-error; }
+.admin-menu-dish-visual { min-height: 190px; }
+.admin-menu-dish-visual--green { background: linear-gradient(145deg, variables.$color-primary, #93a58f); }
+.admin-menu-dish-visual--copper { background: linear-gradient(145deg, variables.$color-accent, #6d4937); }
+.admin-menu-dish-visual--neutral { background: linear-gradient(145deg, #aaa399, #535954); }
+.admin-menu-card-body { padding: 1rem; }
+.admin-menu-category-label,
+.admin-menu-badge { display: inline-flex; margin: .75rem 0; padding: .2rem .5rem; border-radius: variables.$radius-sm; color: variables.$color-primary; background: variables.$color-surface; font-size: .8rem; font-weight: 700; }
+.admin-menu-price { margin-bottom: .5rem; color: variables.$color-primary; font-size: 1.25rem; font-weight: 700; }
+.admin-menu-position { padding-top: .75rem; border-top: 1px solid variables.$color-border; color: variables.$color-text-muted; font-size: .875rem; }
+.admin-menu-restaurant-card ul { padding-left: 1.25rem; }
+
+.admin-menu-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .6rem; }
+.admin-menu-actions .btn { width: 100%; min-width: 0; padding-right: .45rem; padding-left: .45rem; }
+.admin-menu-order-button { border: 1px solid variables.$color-border; color: variables.$color-primary; background: variables.$color-surface; }
+.admin-menu-order-button:hover:not(:disabled),
+.admin-menu-order-button:focus:not(:disabled) { color: variables.$color-surface; background: variables.$color-primary; }
+.admin-menu-delete-button { grid-column: 1/-1; border: 1px solid variables.$color-error; color: variables.$color-error; background: transparent; }
+.admin-menu-delete-button:hover,
+.admin-menu-delete-button:focus { color: variables.$color-surface; background: variables.$color-error; }
+
+.admin-menu-filter-grid { display: grid; gap: 1rem; margin-bottom: 1.25rem; }
+.admin-menu-field { min-width: 0; }
+.admin-menu-field label { display: block; margin-bottom: .45rem; font-size: .875rem; font-weight: 600; }
+.admin-menu-field .form-control,
+.admin-menu-field .form-select { width: 100%; min-width: 0; min-height: 44px; border-color: variables.$color-border; border-radius: variables.$radius-sm; }
+.admin-menu-field textarea.form-control { min-height: 100px; }
+.admin-menu-field .form-control:focus,
+.admin-menu-field .form-select:focus { border-color: variables.$color-primary; box-shadow: 0 0 0 .2rem rgba(47,74,58,.18); }
+.admin-menu-field .is-invalid { border-color: variables.$color-error; background-image: none; }
+.admin-menu-help { margin: .4rem 0 0; color: variables.$color-text-muted; font-size: .875rem; }
+.admin-menu-error { min-height: 1.2rem; margin: .3rem 0 0; color: variables.$color-error; font-size: .875rem; font-weight: 600; }
+.admin-menu-reset { width: 100%; border: 0; color: variables.$color-primary; background: transparent; text-decoration: underline; text-underline-offset: .2rem; }
+.admin-menu-reset:hover,
+.admin-menu-reset:focus { background: variables.$color-background; }
+.admin-menu-empty { margin: 0; padding: 1.5rem; border: 1px dashed variables.$color-border; border-radius: variables.$radius-md; color: variables.$color-text-muted; background: variables.$color-background; text-align: center; }
+
+.admin-menu-modal .modal-content { border: 1px solid variables.$color-border; border-radius: variables.$radius-md; }
+.admin-menu-modal .modal-header,
+.admin-menu-modal .modal-footer { border-color: variables.$color-border; }
+.admin-menu-modal .modal-title { font-family: variables.$font-body; font-size: 1.35rem; }
+.admin-menu-form-grid { display: grid; gap: 1rem; }
+.admin-menu-switch { display: flex; min-height: 44px; align-items: center; gap: .55rem; padding-left: 0; }
+.admin-menu-switch .form-check-input { width: 2.5rem; min-width: 2.5rem; height: 1.35rem; margin: 0; float: none; }
+.admin-menu-switch .form-check-input:checked { border-color: variables.$color-primary; background-color: variables.$color-primary; }
+.admin-menu-delete-summary > div { display: grid; grid-template-columns: .75fr 1.25fr; gap: 1rem; padding: .6rem 0; border-top: 1px solid variables.$color-border; }
+.admin-menu-delete-summary dt { font-weight: 600; }
+.admin-menu-delete-summary dd { overflow-wrap: anywhere; margin: 0; color: variables.$color-text-muted; text-align: right; }
+
+@media (min-width:390px) { .admin-menu-indicators { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (min-width:576px) {
+  .admin-menu-section { padding: 1.5rem; }
+  .admin-menu-section-heading { flex-direction: row; align-items: end; justify-content: space-between; }
+  .admin-menu-section-heading .btn { width: auto; }
+  .admin-menu-category-grid,
+  .admin-menu-dish-grid,
+  .admin-menu-restaurant-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .admin-menu-card-heading { flex-direction: row; justify-content: space-between; }
+  .admin-menu-filter-grid { grid-template-columns: repeat(2,minmax(0,1fr)); align-items: end; }
+  .admin-menu-reset { width: auto; justify-self: start; }
+  .admin-menu-form-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .admin-menu-modal .modal-footer .btn { width: auto; }
+}
+@media (min-width:992px) {
+  .admin-menu-indicators { grid-template-columns: repeat(4,minmax(0,1fr)); }
+  .admin-menu-filter-grid { grid-template-columns: 1.4fr 1fr 1fr auto; }
+  .admin-menu-filter-grid--menus { grid-template-columns: 1.5fr 1fr auto; }
+}
+@media (min-width:1400px) {
+  .admin-menu-category-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .admin-menu-dish-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .admin-menu-restaurant-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+}
+@media (max-width:575.98px) { .admin-menu-modal .modal-footer .btn { width:100%; } }
