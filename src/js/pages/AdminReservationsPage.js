@@ -1,6 +1,9 @@
 import Modal from 'bootstrap/js/dist/modal';
 
 import { AdminLayout, initAdminLayout } from '../components/admin/AdminLayout.js';
+import { cleanupBootstrapOverlayState } from '../utils/bootstrapCleanup.js';
+import { formatTime } from '../utils/formatters.js';
+import { escapeHtml } from '../utils/textUtils.js';
 
 const VALID_STATUSES = ['Confirmée', 'En attente'];
 
@@ -55,19 +58,6 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
 function formatDate(value) {
   const date = parseLocalIsoDate(value);
   return date ? dateFormatter.format(date) : 'Date invalide';
-}
-
-function formatTime(value) {
-  return value.replace(':', ' h ');
-}
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
 }
 
 function getServiceFromTime(time) {
@@ -337,8 +327,7 @@ export function initAdminReservationsPage() {
   return () => {
     listeners.forEach((removeListener) => removeListener());
     [editModal, cancelModal].forEach((modal) => { modal.hide(); modal.dispose(); });
-    document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove());
-    document.body.classList.remove('modal-open'); document.body.style.removeProperty('padding-right');
+    cleanupBootstrapOverlayState();
     cleanupAdminLayout?.();
   };
 }

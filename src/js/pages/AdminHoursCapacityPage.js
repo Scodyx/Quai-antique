@@ -1,6 +1,7 @@
 import Modal from 'bootstrap/js/dist/modal';
 
 import { AdminLayout, initAdminLayout } from '../components/admin/AdminLayout.js';
+import { cleanupBootstrapOverlayState } from '../utils/bootstrapCleanup.js';
 
 const DAY_DEFINITIONS = [
   { id: 'monday', label: 'Lundi' },
@@ -386,8 +387,7 @@ export function initAdminHoursCapacityPage() {
   return () => {
     listeners.forEach((removeListener) => removeListener());
     resetModal.hide(); resetModal.dispose();
-    document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove());
-    document.body.classList.remove('modal-open'); document.body.style.removeProperty('padding-right');
+    cleanupBootstrapOverlayState();
     cleanupAdminLayout?.();
   };
 }

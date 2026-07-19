@@ -32,7 +32,7 @@ export function SignupPage() {
 
   return `
     ${Header()}
-    <main class="auth-page">
+    <div class="auth-page">
       <section class="auth-intro section" aria-labelledby="signup-page-title">
         <div class="container auth-intro__content text-center">
           <p class="section-eyebrow">Votre espace client</p>
@@ -109,7 +109,7 @@ export function SignupPage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
     ${Footer()}
   `;
 }

@@ -1,4 +1,6 @@
 import { AdminLayout } from '../components/admin/AdminLayout.js';
+import { formatTime } from '../utils/formatters.js';
+import { escapeHtml } from '../utils/textUtils.js';
 
 const MOCK_MAX_CAPACITY = 30;
 
@@ -24,10 +26,6 @@ const MOCK_OPENING_HOURS = {
 const currentDateFormatter = new Intl.DateTimeFormat('fr-FR', {
   weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
 });
-
-function formatTime(time) {
-  return time.replace(':', ' h ');
-}
 
 function getDashboardStatistics() {
   const guests = MOCK_TODAY_RESERVATIONS.reduce((total, reservation) => total + reservation.guests, 0);
@@ -80,12 +78,12 @@ function createServices() {
 function createReservationList() {
   return MOCK_TODAY_RESERVATIONS.map((reservation) => `
     <li class="admin-reservation">
-      <div class="admin-reservation__primary"><strong>${formatTime(reservation.time)}</strong><span>${reservation.client}</span></div>
+      <div class="admin-reservation__primary"><strong>${escapeHtml(formatTime(reservation.time))}</strong><span>${escapeHtml(reservation.client)}</span></div>
       <dl class="admin-reservation__details">
-        <div><dt>Service</dt><dd>${reservation.service}</dd></div>
+        <div><dt>Service</dt><dd>${escapeHtml(reservation.service)}</dd></div>
         <div><dt>Couverts</dt><dd>${reservation.guests}</dd></div>
-        <div><dt>Allergies</dt><dd>${reservation.allergies || 'Aucune allergie renseignée'}</dd></div>
-        <div><dt>Statut</dt><dd><span class="admin-status admin-status--${reservation.status === 'Confirmée' ? 'confirmed' : 'pending'}">${reservation.status}</span></dd></div>
+        <div><dt>Allergies</dt><dd>${escapeHtml(reservation.allergies || 'Aucune allergie renseignée')}</dd></div>
+        <div><dt>Statut</dt><dd><span class="admin-status admin-status--${reservation.status === 'Confirmée' ? 'confirmed' : 'pending'}">${escapeHtml(reservation.status)}</span></dd></div>
       </dl>
     </li>
   `).join('');

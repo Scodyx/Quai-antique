@@ -1,6 +1,8 @@
 import Modal from 'bootstrap/js/dist/modal';
 
 import { AdminLayout, initAdminLayout } from '../components/admin/AdminLayout.js';
+import { cleanupBootstrapOverlayState } from '../utils/bootstrapCleanup.js';
+import { escapeHtml, normalizeText } from '../utils/textUtils.js';
 
 const VISUAL_VARIANTS = ['green', 'copper', 'neutral'];
 const priceFormatter = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
@@ -30,8 +32,6 @@ const INITIAL_MENUS = [
   { id: 703, name: 'Menu Prestige', description: 'Une expérience gastronomique qui laisse carte blanche au chef.', price: 78, composition: ['Dégustation en cinq temps', 'Mignardises'], badge: 'Dégustation', isPublished: true, order: 3 },
 ];
 
-function escapeHtml(value) { return String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;'); }
-function normalizeText(value) { return value.trim().replace(/\s+/g, ' '); }
 function formatPrice(price) { return priceFormatter.format(price); }
 function normalizeOrder(items) { items.sort((a, b) => a.order - b.order); items.forEach((item, index) => { item.order = index + 1; }); }
 function normalizeDishOrder(dishes, categoryId) { normalizeOrder(dishes.filter((dish) => dish.categoryId === categoryId)); }
@@ -164,5 +164,5 @@ export function initAdminMenuManagementPage() {
   addListener(elements['#admin-menu-search'],'input',render);addListener(elements['#admin-menu-status-filter'],'change',render);addListener(elements['#admin-menu-reset'],'click',()=>{elements['#admin-menu-search'].value='';elements['#admin-menu-status-filter'].value='all';render();});
   addListener(modalEntries.category[1],'submit',submitCategory);addListener(modalEntries.dish[1],'submit',submitDish);addListener(modalEntries.menu[1],'submit',submitMenu);addListener(elements['#admin-menu-confirm-delete'],'click',confirmDeletion);
   [...Object.values(modalEntries).map(([element])=>element),elements['#admin-menu-delete-modal']].forEach((element)=>addListener(element,'hidden.bs.modal',focusOnLive));render();
-  return()=>{listeners.forEach((remove)=>remove());[...Object.values(modals),deleteModal].forEach((modal)=>{modal.hide();modal.dispose();});document.querySelectorAll('.modal-backdrop').forEach((backdrop)=>backdrop.remove());document.body.classList.remove('modal-open');document.body.style.removeProperty('padding-right');cleanupAdminLayout?.();};
+  return()=>{listeners.forEach((remove)=>remove());[...Object.values(modals),deleteModal].forEach((modal)=>{modal.hide();modal.dispose();});cleanupBootstrapOverlayState();cleanupAdminLayout?.();};
 }

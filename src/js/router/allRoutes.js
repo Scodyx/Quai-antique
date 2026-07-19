@@ -1,4 +1,4 @@
-import { GalleryPage } from '../pages/GalleryPage.js';
+import { GalleryPage, initGalleryPage } from '../pages/GalleryPage.js';
 import { AccountPage, initAccountPage } from '../pages/AccountPage.js';
 import { initAdminLayout } from '../components/admin/AdminLayout.js';
 import { AdminDashboardPage } from '../pages/AdminDashboardPage.js';
@@ -6,7 +6,6 @@ import { AdminHoursCapacityPage, initAdminHoursCapacityPage } from '../pages/Adm
 import { AdminGalleryPage, initAdminGalleryPage } from '../pages/AdminGalleryPage.js';
 import { AdminMenuManagementPage, initAdminMenuManagementPage } from '../pages/AdminMenuManagementPage.js';
 import { AdminReservationsPage, initAdminReservationsPage } from '../pages/AdminReservationsPage.js';
-import { createAdminPlaceholderPage } from '../pages/AdminPlaceholderPage.js';
 import { HomePage } from '../pages/HomePage.js';
 import { initLoginPage, LoginPage } from '../pages/LoginPage.js';
 import { MenuPage } from '../pages/MenuPage.js';
@@ -17,7 +16,7 @@ import { Route } from './Route.js';
 
 export const allRoutes = [
   new Route('/', HomePage),
-  new Route('/galerie', GalleryPage),
+  new Route('/galerie', GalleryPage, initGalleryPage),
   new Route('/carte-et-menus', MenuPage),
   new Route('/reservation', ReservationPage, initReservationPage),
   new Route('/connexion', LoginPage, initLoginPage),

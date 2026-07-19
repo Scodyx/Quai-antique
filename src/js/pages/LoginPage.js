@@ -31,7 +31,7 @@ export function LoginPage() {
 
   return `
     ${Header()}
-    <main class="auth-page">
+    <div class="auth-page">
       <section class="auth-intro section" aria-labelledby="login-page-title">
         <div class="container auth-intro__content text-center">
           <p class="section-eyebrow">Espace sécurisé</p>
@@ -96,7 +96,7 @@ export function LoginPage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
     ${Footer()}
   `;
 }

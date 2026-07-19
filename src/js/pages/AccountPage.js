@@ -2,6 +2,9 @@ import Modal from 'bootstrap/js/dist/modal';
 
 import { Footer } from '../components/Footer.js';
 import { Header } from '../components/Header.js';
+import { cleanupBootstrapOverlayState } from '../utils/bootstrapCleanup.js';
+import { formatTime } from '../utils/formatters.js';
+import { escapeHtml } from '../utils/textUtils.js';
 
 const NAME_PATTERN = /^[\p{L}\p{M}]+(?:[ '\u2019-][\p{L}\p{M}]+)*$/u;
 
@@ -40,21 +43,8 @@ function normalizeName(value) {
   return value.trim().replace(/\s+/g, ' ');
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
 function formatDate(dateValue) {
   return dateFormatter.format(new Date(`${dateValue}T12:00:00`));
-}
-
-function formatTime(time) {
-  return time.replace(':', ' h ');
 }
 
 function prepareProfileData(inputs) {
@@ -113,7 +103,7 @@ function createReservationCard(reservation) {
 export function AccountPage() {
   return `
     ${Header()}
-    <main class="account-page">
+    <div class="account-page">
       <section class="account-intro section" aria-labelledby="account-title">
         <div class="container site-container account-intro__content">
           <p class="section-eyebrow">Espace client</p>
@@ -196,7 +186,7 @@ export function AccountPage() {
           <button class="btn btn-danger" id="open-delete-account" type="button">Supprimer mon compte</button>
         </section>
       </div>
-    </main>
+    </div>
 
     <div class="modal fade account-modal" id="edit-reservation-modal" tabindex="-1" aria-labelledby="edit-reservation-title" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
@@ -405,8 +395,6 @@ export function initAccountPage() {
   return () => {
     listeners.forEach((removeListener) => removeListener());
     [editModal, cancelModal, deleteModal].forEach((modal) => { modal.hide(); modal.dispose(); });
-    document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove());
-    document.body.classList.remove('modal-open');
-    document.body.style.removeProperty('padding-right');
+    cleanupBootstrapOverlayState();
   };
 }

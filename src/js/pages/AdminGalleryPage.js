@@ -1,6 +1,8 @@
 import Modal from 'bootstrap/js/dist/modal';
 
 import { AdminLayout, initAdminLayout } from '../components/admin/AdminLayout.js';
+import { cleanupBootstrapOverlayState } from '../utils/bootstrapCleanup.js';
+import { escapeHtml, normalizeText } from '../utils/textUtils.js';
 
 const CATEGORIES = ['Restaurant', 'Plats', 'Équipe', 'Ambiance'];
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -21,19 +23,6 @@ const MOCK_GALLERY_ITEMS = [
   { id: 411, title: 'Service en salle', alternativeText: 'Équipe assurant le service dans la salle', category: 'Équipe', isPublished: true, order: 11, visualVariant: 'gallery-visual--forest' },
   { id: 412, title: 'Ambiance du soir', alternativeText: 'Salle du restaurant dans une ambiance du soir', category: 'Ambiance', isPublished: true, order: 12, visualVariant: 'gallery-visual--evening' },
 ];
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
-function normalizeText(value) {
-  return value.trim().replace(/\s+/g, ' ');
-}
 
 function sortAndNormalize(items) {
   items.sort((first, second) => first.order - second.order);
@@ -324,7 +313,7 @@ export function initAdminGalleryPage() {
 
   return () => {
     listeners.forEach((removeListener) => removeListener()); clearPendingPreview(); activeBlobUrls.forEach((url) => URL.revokeObjectURL(url)); activeBlobUrls.clear();
-    [formModal, deleteModal].forEach((modal) => { modal.hide(); modal.dispose(); }); document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove());
-    document.body.classList.remove('modal-open'); document.body.style.removeProperty('padding-right'); cleanupAdminLayout?.();
+    [formModal, deleteModal].forEach((modal) => { modal.hide(); modal.dispose(); }); cleanupBootstrapOverlayState();
+    cleanupAdminLayout?.();
   };
 }

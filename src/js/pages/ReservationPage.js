@@ -2,6 +2,8 @@ import Modal from 'bootstrap/js/dist/modal';
 
 import { Footer } from '../components/Footer.js';
 import { Header } from '../components/Header.js';
+import { cleanupBootstrapOverlayState } from '../utils/bootstrapCleanup.js';
+import { formatTime } from '../utils/formatters.js';
 
 const PENDING_RESERVATION_KEY = 'quaiAntique.pendingReservation';
 const MOCK_MAX_CAPACITY = 30;
@@ -69,10 +71,6 @@ function minutesToTime(totalMinutes) {
   const hours = String(Math.floor(totalMinutes / 60)).padStart(2, '0');
   const minutes = String(totalMinutes % 60).padStart(2, '0');
   return `${hours}:${minutes}`;
-}
-
-function formatTime(time) {
-  return time.replace(':', ' h ');
 }
 
 function generateServiceSlots(service) {
@@ -619,8 +617,6 @@ export function initReservationPage() {
     listeners.forEach((removeListener) => removeListener());
     authModal.hide();
     authModal.dispose();
-    document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove());
-    document.body.classList.remove('modal-open');
-    document.body.style.removeProperty('padding-right');
+    cleanupBootstrapOverlayState();
   };
 }

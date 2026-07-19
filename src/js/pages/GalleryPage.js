@@ -1,5 +1,9 @@
+import Modal from 'bootstrap/js/dist/modal';
+
 import { Footer } from '../components/Footer.js';
 import { Header } from '../components/Header.js';
+import { cleanupBootstrapOverlayState } from '../utils/bootstrapCleanup.js';
+import { escapeHtml } from '../utils/textUtils.js';
 
 // Ces données locales seront remplacées plus tard par un appel à l’API Symfony.
 const galleryItems = [
@@ -95,18 +99,18 @@ function createGalleryCard(item) {
       <div
         class="image-placeholder gallery-card__visual ${item.variant}"
         role="img"
-        aria-label="${item.description}"
+        aria-label="${escapeHtml(item.description)}"
       ></div>
       <div class="gallery-card__content">
-        <span class="gallery-card__category">${item.category}</span>
-        <h2>${item.title}</h2>
+        <span class="gallery-card__category">${escapeHtml(item.category)}</span>
+        <h2>${escapeHtml(item.title)}</h2>
         <button
           class="btn btn-secondary gallery-card__button"
           type="button"
           data-bs-toggle="modal"
           data-bs-target="#gallery-modal"
           data-gallery-id="${item.id}"
-          aria-label="Agrandir : ${item.title}"
+          aria-label="Agrandir : ${escapeHtml(item.title)}"
         >
           Agrandir
         </button>
@@ -115,7 +119,7 @@ function createGalleryCard(item) {
   `;
 }
 
-document.addEventListener('show.bs.modal', (event) => {
+function handleGalleryModalShow(event) {
   const modal = event.target;
 
   if (!(modal instanceof HTMLElement) || modal.id !== 'gallery-modal') {
@@ -137,7 +141,7 @@ document.addEventListener('show.bs.modal', (event) => {
   modalCategory.textContent = item.category;
   modalVisual.className = `image-placeholder gallery-modal__visual ${item.variant}`;
   modalVisual.setAttribute('aria-label', item.description);
-});
+}
 
 export function GalleryPage() {
   const galleryCards = galleryItems.map(createGalleryCard).join('');
@@ -215,4 +219,22 @@ export function GalleryPage() {
     </div>
     ${Footer()}
   `;
+}
+
+export function initGalleryPage() {
+  const modalElement = document.querySelector('#gallery-modal');
+
+  if (!modalElement) {
+    return undefined;
+  }
+
+  const modal = Modal.getOrCreateInstance(modalElement);
+  modalElement.addEventListener('show.bs.modal', handleGalleryModalShow);
+
+  return () => {
+    modalElement.removeEventListener('show.bs.modal', handleGalleryModalShow);
+    modal.hide();
+    modal.dispose();
+    cleanupBootstrapOverlayState();
+  };
 }

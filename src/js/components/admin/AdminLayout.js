@@ -2,6 +2,7 @@ import Offcanvas from 'bootstrap/js/dist/offcanvas';
 
 import { AdminHeader } from './AdminHeader.js';
 import { AdminNavigation } from './AdminNavigation.js';
+import { cleanupBootstrapOverlayState } from '../../utils/bootstrapCleanup.js';
 
 export function AdminLayout(content) {
   const currentPath = window.location.pathname;
@@ -14,9 +15,9 @@ export function AdminLayout(content) {
         <aside class="admin-sidebar">
           ${AdminNavigation(currentPath, 'admin-nav--desktop')}
         </aside>
-        <main class="admin-main" id="admin-main-content" tabindex="-1">
+        <div class="admin-main" id="admin-main-content" tabindex="-1">
           ${content}
-        </main>
+        </div>
       </div>
     </div>
   `;
@@ -50,8 +51,6 @@ export function initAdminLayout() {
     mobileLinks.forEach((link) => link.removeEventListener('click', handleLinkClick));
     offcanvas.hide();
     offcanvas.dispose();
-    document.querySelectorAll('.offcanvas-backdrop').forEach((backdrop) => backdrop.remove());
-    document.body.classList.remove('offcanvas-backdrop', 'overflow-hidden');
-    document.body.style.removeProperty('padding-right');
+    cleanupBootstrapOverlayState();
   };
 }

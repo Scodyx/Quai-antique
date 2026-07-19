@@ -1,5 +1,6 @@
 import { Footer } from '../components/Footer.js';
 import { Header } from '../components/Header.js';
+import { escapeHtml } from '../utils/textUtils.js';
 
 // Ces données locales seront remplacées plus tard par celles de l’API Symfony.
 const menuCategories = [
@@ -138,7 +139,7 @@ function formatPrice(price) {
 
 function createDishCard(dish) {
   const dietaryBadge = dish.dietaryInfo
-    ? `<span class="menu-badge">${dish.dietaryInfo}</span>`
+    ? `<span class="menu-badge">${escapeHtml(dish.dietaryInfo)}</span>`
     : '';
 
   return `
@@ -146,15 +147,15 @@ function createDishCard(dish) {
       <div
         class="image-placeholder menu-dish-card__visual ${dish.variant}"
         role="img"
-        aria-label="Présentation temporaire du plat ${dish.name}"
+        aria-label="Présentation temporaire du plat ${escapeHtml(dish.name)}"
       ></div>
       <div class="menu-dish-card__content">
         ${dietaryBadge}
         <div class="menu-dish-card__heading">
-          <h4>${dish.name}</h4>
+          <h4>${escapeHtml(dish.name)}</h4>
           <p class="menu-dish-card__price">${formatPrice(dish.price)}</p>
         </div>
-        <p class="menu-dish-card__description">${dish.description}</p>
+        <p class="menu-dish-card__description">${escapeHtml(dish.description)}</p>
       </div>
     </article>
   `;
@@ -166,8 +167,8 @@ function createCategorySection(category) {
   return `
     <section class="menu-category" id="${category.id}" aria-labelledby="${category.id}-title">
       <div class="menu-category__heading">
-        <h3 id="${category.id}-title">${category.name}</h3>
-        <p>${category.description}</p>
+        <h3 id="${category.id}-title">${escapeHtml(category.name)}</h3>
+        <p>${escapeHtml(category.description)}</p>
       </div>
       <div class="menu-dish-grid">
         ${dishes}
@@ -177,14 +178,14 @@ function createCategorySection(category) {
 }
 
 function createRestaurantMenuCard(menu) {
-  const badge = menu.badge ? `<span class="menu-badge">${menu.badge}</span>` : '';
-  const composition = menu.composition.map((item) => `<li>${item}</li>`).join('');
+  const badge = menu.badge ? `<span class="menu-badge">${escapeHtml(menu.badge)}</span>` : '';
+  const composition = menu.composition.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
 
   return `
     <article class="restaurant-menu-card">
       ${badge}
-      <h3>${menu.name}</h3>
-      <p class="restaurant-menu-card__description">${menu.description}</p>
+      <h3>${escapeHtml(menu.name)}</h3>
+      <p class="restaurant-menu-card__description">${escapeHtml(menu.description)}</p>
       <ul class="restaurant-menu-card__composition">
         ${composition}
       </ul>
