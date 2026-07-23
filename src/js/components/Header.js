@@ -15,6 +15,7 @@ function navigationLinks() {
 
   if (isAuthenticated()) {
     links.push({ label: 'Mon compte', path: '/mon-compte' });
+    links.push({ label: 'Mes réservations', path: '/mes-reservations' });
     if (isAdmin()) links.push({ label: 'Administration', path: '/administration' });
   } else {
     links.push({ label: 'Connexion', path: '/connexion' });

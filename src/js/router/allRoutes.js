@@ -1,7 +1,7 @@
 import { GalleryPage, initGalleryPage } from '../pages/GalleryPage.js';
 import { AccountPage, initAccountPage } from '../pages/AccountPage.js';
 import { initAdminLayout } from '../components/admin/AdminLayout.js';
-import { AdminDashboardPage } from '../pages/AdminDashboardPage.js';
+import { AdminDashboardPage, initAdminDashboardPage } from '../pages/AdminDashboardPage.js';
 import { AdminHoursCapacityPage, initAdminHoursCapacityPage } from '../pages/AdminHoursCapacityPage.js';
 import { AdminGalleryPage, initAdminGalleryPage } from '../pages/AdminGalleryPage.js';
 import { AdminMenuManagementPage, initAdminMenuManagementPage } from '../pages/AdminMenuManagementPage.js';
@@ -18,14 +18,16 @@ export const allRoutes = [
   new Route('/', HomePage, initHomePage),
   new Route('/galerie', GalleryPage, initGalleryPage),
   new Route('/carte-et-menus', MenuPage, initMenuPage),
-  new Route('/reservation', ReservationPage, initReservationPage),
+  new Route('/reservation', ReservationPage, initReservationPage, { auth: true }),
+  new Route('/reservation/:id', ReservationPage, initReservationPage, { auth: true }),
   new Route('/connexion', LoginPage, initLoginPage),
   new Route('/inscription', SignupPage, initSignupPage),
-  new Route('/mon-compte', AccountPage, initAccountPage),
-  new Route('/administration', AdminDashboardPage, initAdminLayout),
-  new Route('/administration/reservations', AdminReservationsPage, initAdminReservationsPage),
-  new Route('/administration/horaires-capacite', AdminHoursCapacityPage, initAdminHoursCapacityPage),
-  new Route('/administration/galerie', AdminGalleryPage, initAdminGalleryPage),
-  new Route('/administration/carte-et-menus', AdminMenuManagementPage, initAdminMenuManagementPage),
+  new Route('/mon-compte', AccountPage, initAccountPage, { auth: true }),
+  new Route('/mes-reservations', AccountPage, initAccountPage, { auth: true }),
+  new Route('/administration', AdminDashboardPage, initAdminDashboardPage, { role: 'ROLE_ADMIN' }),
+  new Route('/administration/reservations', AdminReservationsPage, initAdminReservationsPage, { role: 'ROLE_ADMIN' }),
+  new Route('/administration/horaires-capacite', AdminHoursCapacityPage, initAdminHoursCapacityPage, { role: 'ROLE_ADMIN' }),
+  new Route('/administration/galerie', AdminGalleryPage, initAdminGalleryPage, { role: 'ROLE_ADMIN' }),
+  new Route('/administration/carte-et-menus', AdminMenuManagementPage, initAdminMenuManagementPage, { role: 'ROLE_ADMIN' }),
   new Route('*', NotFoundPage),
 ];

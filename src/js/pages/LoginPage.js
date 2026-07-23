@@ -3,6 +3,7 @@ import { Header } from '../components/Header.js';
 import { initializePasswordToggles } from '../utils/passwordVisibility.js';
 import { login } from '../auth/authService.js';
 import { ApiError } from '../api/ApiError.js';
+import { AUTH_MESSAGE_KEY, RETURN_PATH_KEY } from '../auth/authService.js';
 
 const PENDING_RESERVATION_KEY = 'quaiAntique.pendingReservation';
 
@@ -119,6 +120,12 @@ export function initLoginPage() {
   if (!emailInput || !passwordInput || !emailError || !passwordError || !feedback) {
     return undefined;
   }
+  const authMessage = sessionStorage.getItem(AUTH_MESSAGE_KEY);
+  if (authMessage) {
+    feedback.className = 'auth-feedback alert alert-warning';
+    feedback.textContent = authMessage;
+    sessionStorage.removeItem(AUTH_MESSAGE_KEY);
+  }
 
   const listeners = [];
   const cleanupPasswordToggles = initializePasswordToggles(form);
@@ -189,7 +196,9 @@ export function initLoginPage() {
       feedback.className = 'auth-feedback alert alert-success';
       feedback.textContent = 'Connexion réussie.';
       window.setTimeout(() => {
-        window.history.pushState({}, '', '/');
+        const returnPath = sessionStorage.getItem(RETURN_PATH_KEY) || '/';
+        sessionStorage.removeItem(RETURN_PATH_KEY);
+        window.history.pushState({}, '', returnPath);
         window.dispatchEvent(new PopStateEvent('popstate'));
       }, 350);
     } catch (error) {

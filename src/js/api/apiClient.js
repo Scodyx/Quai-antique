@@ -2,6 +2,7 @@ import { ApiError, API_ERROR_MESSAGES } from './ApiError.js';
 import { buildApiUrl } from './apiConfig.js';
 
 let accessTokenProvider = null;
+let authenticationFailureHandler = null;
 
 const SENSITIVE_KEY_PATTERN = /password|passphrase|token|authorization|secret|credential/i;
 
@@ -111,6 +112,10 @@ export function setAccessTokenProvider(provider = null) {
   accessTokenProvider = provider;
 }
 
+export function setAuthenticationFailureHandler(handler = null) {
+  authenticationFailureHandler = handler;
+}
+
 export function isApiAbortError(error) {
   return error instanceof ApiError && error.code === 'REQUEST_ABORTED';
 }
@@ -183,7 +188,7 @@ export async function apiRequest(path, options = {}) {
       ? null
       : sanitizeErrorData(responseData);
 
-    throw new ApiError(
+    const error = new ApiError(
       extractErrorMessage(safeData) || API_ERROR_MESSAGES.http,
       {
         status: response.status,
@@ -193,6 +198,10 @@ export async function apiRequest(path, options = {}) {
         url: errorUrl,
       },
     );
+    if (response.status === 401 && authenticationFailureHandler && path !== '/api/login') {
+      authenticationFailureHandler(error);
+    }
+    throw error;
   }
 
   return responseData;

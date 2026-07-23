@@ -1,8 +1,17 @@
-import { apiDelete, apiGet, apiPost, setAccessTokenProvider } from '../api/apiClient.js';
+import {
+  apiDelete,
+  apiGet,
+  apiPost,
+  setAccessTokenProvider,
+  setAuthenticationFailureHandler,
+} from '../api/apiClient.js';
 
 export const TOKEN_STORAGE_KEY = 'quai_antique_api_token';
 export const USER_STORAGE_KEY = 'quai_antique_user';
 export const AUTH_CHANGED_EVENT = 'quai-antique:auth-changed';
+export const AUTH_MESSAGE_KEY = 'quai_antique_auth_message';
+export const RETURN_PATH_KEY = 'quai_antique_return_path';
+let restorationPromise = null;
 
 function readStorage(key) {
   try {
@@ -12,16 +21,17 @@ function readStorage(key) {
   }
 }
 
-function writeSession(apiToken, user) {
+export function storeSession(apiToken, user) {
   localStorage.setItem(TOKEN_STORAGE_KEY, apiToken);
   localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
   window.dispatchEvent(new CustomEvent(AUTH_CHANGED_EVENT));
 }
 
-function clearSession() {
+export function clearSession(message = '') {
   try {
     localStorage.removeItem(TOKEN_STORAGE_KEY);
     localStorage.removeItem(USER_STORAGE_KEY);
+    if (message) sessionStorage.setItem(AUTH_MESSAGE_KEY, message);
   } finally {
     window.dispatchEvent(new CustomEvent(AUTH_CHANGED_EVENT));
   }
@@ -47,15 +57,19 @@ export function isAdmin() {
   return getStoredUser()?.roles?.includes('ROLE_ADMIN') ?? false;
 }
 
+export function hasRole(role) {
+  return getStoredUser()?.roles?.includes(role) ?? false;
+}
+
 export async function login(email, password) {
   const payload = await apiPost('/api/login', { email, password });
-  writeSession(payload.apiToken, payload.user);
+  storeSession(payload.apiToken, payload.user);
   return payload.user;
 }
 
 export async function register(data) {
   const payload = await apiPost('/api/registration', data);
-  writeSession(payload.apiToken, payload.user);
+  storeSession(payload.apiToken, payload.user);
   return payload.user;
 }
 
@@ -81,9 +95,17 @@ export async function restoreSession() {
   }
 }
 
+export function whenAuthReady() {
+  if (!restorationPromise) restorationPromise = restoreSession();
+  return restorationPromise;
+}
+
 export async function deleteCurrentAccount() {
   await apiDelete('/api/account');
   clearSession();
 }
 
 setAccessTokenProvider(getStoredToken);
+setAuthenticationFailureHandler(() => {
+  clearSession('Votre session n’est plus valide. Veuillez vous reconnecter.');
+});

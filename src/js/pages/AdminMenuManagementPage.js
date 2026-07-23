@@ -1,168 +1,170 @@
-import Modal from 'bootstrap/js/dist/modal';
-
 import { AdminLayout, initAdminLayout } from '../components/admin/AdminLayout.js';
-import { cleanupBootstrapOverlayState } from '../utils/bootstrapCleanup.js';
-import { escapeHtml, normalizeText } from '../utils/textUtils.js';
+import {
+  createCategory, createFood, createMenu,
+  deleteCategory, deleteFood, deleteMenu,
+  updateCategory, updateFood, updateMenu,
+} from '../api/adminApi.js';
+import { getCategories, getFoods, getMenus, getRestaurant } from '../api/publicApi.js';
+import { apiErrorMessage, clearFormErrors, showFormErrors } from '../utils/formErrors.js';
+import { centsToEurosInput, eurosInputToCents, formatPrice } from '../utils/formatters.js';
 
-const VISUAL_VARIANTS = ['green', 'copper', 'neutral'];
-const priceFormatter = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
-
-// Ces catégories, plats et menus simulés seront remplacés par les données de l’API Symfony.
-const INITIAL_CATEGORIES = [
-  { id: 501, name: 'Entrées', description: 'Des assiettes délicates pour ouvrir le repas au rythme des saisons.', order: 1, isPublished: true },
-  { id: 502, name: 'Plats', description: 'Une cuisine généreuse associant produits locaux et gestes contemporains.', order: 2, isPublished: true },
-  { id: 503, name: 'Desserts', description: 'Des créations gourmandes pensées comme la dernière note du repas.', order: 3, isPublished: true },
-];
-
-const INITIAL_DISHES = [
-  { id: 601, categoryId: 501, name: 'Œuf parfait, crème de champignons', description: 'Œuf fermier, crème de champignons, noisettes torréfiées et jeunes pousses.', price: 15, dietaryInformation: 'Végétarien', visualVariant: 'neutral', isPublished: true, order: 1 },
-  { id: 602, categoryId: 501, name: 'Truite marinée aux herbes', description: 'Truite des Alpes marinée, herbes fraîches et condiment citronné.', price: 17, dietaryInformation: 'Poisson', visualVariant: 'copper', isPublished: true, order: 2 },
-  { id: 603, categoryId: 501, name: 'Velouté de légumes de saison', description: 'Légumes du moment, huile parfumée et graines croquantes.', price: 13, dietaryInformation: 'Végétarien', visualVariant: 'green', isPublished: true, order: 3 },
-  { id: 604, categoryId: 502, name: 'Saumon rôti, légumes de saison', description: 'Saumon rôti, légumes du marché, écrasé de pommes de terre et jus aux herbes.', price: 27, dietaryInformation: 'Poisson', visualVariant: 'copper', isPublished: true, order: 1 },
-  { id: 605, categoryId: 502, name: 'Risotto forestier', description: 'Riz crémeux, champignons, vieux parmesan et jeunes pousses.', price: 24, dietaryInformation: 'Végétarien', visualVariant: 'green', isPublished: true, order: 2 },
-  { id: 606, categoryId: 502, name: 'Pièce du boucher, jus réduit', description: 'Viande sélectionnée, garniture de saison et jus corsé longuement réduit.', price: 31, dietaryInformation: '', visualVariant: 'neutral', isPublished: true, order: 3 },
-  { id: 607, categoryId: 503, name: 'Dessert du chef', description: 'Création du moment selon les fruits et l’inspiration de la cuisine.', price: 12, dietaryInformation: '', visualVariant: 'copper', isPublished: true, order: 1 },
-  { id: 608, categoryId: 503, name: 'Tarte fine aux pommes', description: 'Pommes fondantes, pâte croustillante et glace à la vanille.', price: 11, dietaryInformation: 'Végétarien', visualVariant: 'neutral', isPublished: true, order: 2 },
-  { id: 609, categoryId: 503, name: 'Crème brûlée à la vanille', description: 'Crème délicatement vanillée sous une fine croûte caramélisée.', price: 10, dietaryInformation: 'Végétarien', visualVariant: 'copper', isPublished: false, order: 3 },
-];
-
-const INITIAL_MENUS = [
-  { id: 701, name: 'Menu Découverte', description: 'Une première découverte de la cuisine du Quai Antique.', price: 42, composition: ['Entrée au choix', 'Plat au choix', 'Dessert au choix'], badge: '', isPublished: true, order: 1 },
-  { id: 702, name: 'Menu Plaisir', description: 'Un parcours complet imaginé autour des produits de saison.', price: 56, composition: ['Mise en bouche', 'Entrée', 'Plat', 'Dessert'], badge: 'Le plus choisi', isPublished: true, order: 2 },
-  { id: 703, name: 'Menu Prestige', description: 'Une expérience gastronomique qui laisse carte blanche au chef.', price: 78, composition: ['Dégustation en cinq temps', 'Mignardises'], badge: 'Dégustation', isPublished: true, order: 3 },
-];
-
-function formatPrice(price) { return priceFormatter.format(price); }
-function normalizeOrder(items) { items.sort((a, b) => a.order - b.order); items.forEach((item, index) => { item.order = index + 1; }); }
-function normalizeDishOrder(dishes, categoryId) { normalizeOrder(dishes.filter((dish) => dish.categoryId === categoryId)); }
-function statusBadge(item, noun) { return `<span class="admin-menu-status admin-menu-status--${item.isPublished ? 'published' : 'hidden'}">${item.isPublished ? `${noun} publié${noun === 'Catégorie' ? 'e' : ''}` : `${noun} masqué${noun === 'Catégorie' ? 'e' : ''}`}</span>`; }
-// Ces fonctions prépareront les futures charges utiles de création, modification, publication, ordre et suppression pour l’API Symfony.
-function prepareCategory(item) { return { id: item.id, name: item.name, description: item.description, isPublished: item.isPublished, order: item.order }; }
-function prepareDish(item) { return { id: item.id, categoryId: item.categoryId, name: item.name, description: item.description, price: item.price, dietaryInformation: item.dietaryInformation, visualVariant: item.visualVariant, isPublished: item.isPublished, order: item.order }; }
-function prepareMenu(item) { return { id: item.id, name: item.name, description: item.description, price: item.price, composition: [...item.composition], badge: item.badge, isPublished: item.isPublished, order: item.order }; }
-function preparePublication(item) { return { id: item.id, isPublished: item.isPublished }; }
-function prepareDeletion(id) { return { id }; }
-function prepareOrder(items) { return { items: items.map(({ id, order }) => ({ id, order })) }; }
-
-function getIndicators(categories, dishes, menus) {
-  return [
-    ['Nombre de catégories', categories.length, 'Catégories disponibles localement'],
-    ['Nombre de plats', dishes.length, 'Plats associés aux catégories'],
-    ['Plats publiés', dishes.filter((dish) => dish.isPublished).length, 'Plats dont le statut est publié'],
-    ['Menus publiés', menus.filter((menu) => menu.isPublished).length, 'Menus actuellement publiés'],
-  ];
-}
-
-function renderIndicators(categories, dishes, menus) {
-  return getIndicators(categories, dishes, menus).map(([label, value, detail]) => `<article class="admin-menu-indicator"><p>${label}</p><strong>${value}</strong><span>${detail}</span></article>`).join('');
-}
-
-function actionButtons(type, item, position, total) {
-  const noun = type === 'category' ? 'la catégorie' : type === 'dish' ? 'le plat' : 'le menu';
-  return `<div class="admin-menu-actions">
-    <button class="btn btn-secondary" type="button" data-menu-type="${type}" data-menu-action="edit" data-menu-id="${item.id}" aria-label="Modifier ${noun} ${escapeHtml(item.name)}">Modifier</button>
-    <button class="btn btn-secondary" type="button" data-menu-type="${type}" data-menu-action="publish" data-menu-id="${item.id}" aria-label="${item.isPublished ? 'Masquer' : 'Publier'} ${noun} ${escapeHtml(item.name)}">${item.isPublished ? 'Masquer' : 'Publier'}</button>
-    <button class="btn admin-menu-order-button" type="button" data-menu-type="${type}" data-menu-action="up" data-menu-id="${item.id}" aria-label="Monter ${noun} ${escapeHtml(item.name)}" ${position === 1 ? 'disabled' : ''}>Monter</button>
-    <button class="btn admin-menu-order-button" type="button" data-menu-type="${type}" data-menu-action="down" data-menu-id="${item.id}" aria-label="Descendre ${noun} ${escapeHtml(item.name)}" ${position === total ? 'disabled' : ''}>Descendre</button>
-    <button class="btn admin-menu-delete-button" type="button" data-menu-type="${type}" data-menu-action="delete" data-menu-id="${item.id}" aria-label="Supprimer ${noun} ${escapeHtml(item.name)}">Supprimer</button>
-  </div>`;
-}
-
-function createCategoryCards(categories, dishes) {
-  normalizeOrder(categories);
-  return categories.map((category) => {
-    const dishCount = dishes.filter((dish) => dish.categoryId === category.id).length;
-    return `<article class="admin-menu-category-card${category.isPublished ? '' : ' admin-menu-card--hidden'}"><div class="admin-menu-card-heading"><h3>${escapeHtml(category.name)}</h3>${statusBadge(category, 'Catégorie')}</div><p>${escapeHtml(category.description)}</p><dl><div><dt>Position</dt><dd>${category.order} sur ${categories.length}</dd></div><div><dt>Plats associés</dt><dd>${dishCount}</dd></div></dl>${actionButtons('category', category, category.order, categories.length)}</article>`;
-  }).join('');
-}
-
-function createDishCards(filteredDishes, categories, allDishes) {
-  return filteredDishes.map((dish) => {
-    const category = categories.find((entry) => entry.id === dish.categoryId);
-    const siblings = allDishes.filter((entry) => entry.categoryId === dish.categoryId).sort((a, b) => a.order - b.order);
-    return `<article class="admin-menu-dish-card${dish.isPublished ? '' : ' admin-menu-card--hidden'}"><div class="admin-menu-dish-visual admin-menu-dish-visual--${dish.visualVariant}" role="img" aria-label="Placeholder du plat ${escapeHtml(dish.name)}"></div><div class="admin-menu-card-body"><div class="admin-menu-card-heading"><h3>${escapeHtml(dish.name)}</h3>${statusBadge(dish, 'Plat')}</div><p class="admin-menu-category-label">${escapeHtml(category?.name ?? 'Catégorie inconnue')}</p><p>${escapeHtml(dish.description)}</p>${dish.dietaryInformation ? `<p class="admin-menu-badge">${escapeHtml(dish.dietaryInformation)}</p>` : ''}<p class="admin-menu-price">${formatPrice(dish.price)}</p><p class="admin-menu-position">Position ${dish.order} sur ${siblings.length} dans cette catégorie</p>${actionButtons('dish', dish, dish.order, siblings.length)}</div></article>`;
-  }).join('');
-}
-
-function createMenuCards(filteredMenus, allMenus) {
-  return filteredMenus.map((menu) => `<article class="admin-menu-restaurant-card${menu.isPublished ? '' : ' admin-menu-card--hidden'}"><div class="admin-menu-card-heading"><h3>${escapeHtml(menu.name)}</h3>${statusBadge(menu, 'Menu')}</div>${menu.badge ? `<p class="admin-menu-badge">${escapeHtml(menu.badge)}</p>` : ''}<p>${escapeHtml(menu.description)}</p><ul>${menu.composition.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}</ul><p class="admin-menu-price">${formatPrice(menu.price)}</p><p class="admin-menu-position">Position ${menu.order} sur ${allMenus.length}</p>${actionButtons('menu', menu, menu.order, allMenus.length)}</article>`).join('');
-}
-
-function field(id, label, control, help = '') { return `<div class="admin-menu-field"><label for="${id}">${label}</label>${control}${help ? `<p class="admin-menu-help" id="${id}-help">${help}</p>` : ''}<p class="admin-menu-error" id="${id}-error"></p></div>`; }
-function modalShell(id, title, formId, body, submitLabel) { return `<div class="modal fade admin-menu-modal" id="${id}" tabindex="-1" aria-labelledby="${id}-title" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="${id}-title">${title}</h2><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Fermer"></button></div><form id="${formId}" novalidate><div class="modal-body"><div class="admin-menu-form-grid">${body}</div></div><div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Fermer</button><button class="btn btn-primary" data-modal-submit type="submit">${submitLabel}</button></div></form></div></div></div>`; }
-
-function createModals() {
-  const published = (id) => `<div class="form-check form-switch admin-menu-switch"><input class="form-check-input" id="${id}" type="checkbox"><label class="form-check-label" for="${id}">Publier</label></div>`;
-  const category = modalShell('admin-category-modal', 'Ajouter une catégorie', 'admin-category-form', `${field('admin-category-name', 'Nom', '<input class="form-control" id="admin-category-name" type="text" maxlength="60" aria-describedby="admin-category-name-error" required>')}${field('admin-category-description', 'Description', '<textarea class="form-control" id="admin-category-description" rows="3" maxlength="180" aria-describedby="admin-category-description-error" required></textarea>')}${published('admin-category-published')}`, 'Ajouter la catégorie');
-  const dish = modalShell('admin-dish-modal', 'Ajouter un plat', 'admin-dish-form', `${field('admin-dish-name', 'Nom', '<input class="form-control" id="admin-dish-name" type="text" maxlength="100" aria-describedby="admin-dish-name-error" required>')}${field('admin-dish-description', 'Description', '<textarea class="form-control" id="admin-dish-description" rows="3" maxlength="300" aria-describedby="admin-dish-description-error" required></textarea>')}${field('admin-dish-price', 'Prix', '<input class="form-control" id="admin-dish-price" type="number" min="0.01" max="500" step="0.01" aria-describedby="admin-dish-price-error" required>')}${field('admin-dish-category', 'Catégorie', '<select class="form-select" id="admin-dish-category" aria-describedby="admin-dish-category-error" required></select>')}${field('admin-dish-dietary', 'Information alimentaire (facultatif)', '<input class="form-control" id="admin-dish-dietary" type="text" maxlength="80" aria-describedby="admin-dish-dietary-error">')}${field('admin-dish-variant', 'Variante visuelle', '<select class="form-select" id="admin-dish-variant" aria-describedby="admin-dish-variant-error"><option value="green">Verte</option><option value="copper">Cuivrée</option><option value="neutral">Neutre</option></select>')}${published('admin-dish-published')}`, 'Ajouter le plat');
-  const menu = modalShell('admin-restaurant-menu-modal', 'Ajouter un menu', 'admin-restaurant-menu-form', `${field('admin-restaurant-menu-name', 'Nom', '<input class="form-control" id="admin-restaurant-menu-name" type="text" maxlength="100" aria-describedby="admin-restaurant-menu-name-error" required>')}${field('admin-restaurant-menu-description', 'Description', '<textarea class="form-control" id="admin-restaurant-menu-description" rows="3" maxlength="300" aria-describedby="admin-restaurant-menu-description-error" required></textarea>')}${field('admin-restaurant-menu-price', 'Prix', '<input class="form-control" id="admin-restaurant-menu-price" type="number" min="0.01" max="500" step="0.01" aria-describedby="admin-restaurant-menu-price-error" required>')}${field('admin-restaurant-menu-composition', 'Composition', '<textarea class="form-control" id="admin-restaurant-menu-composition" rows="5" aria-describedby="admin-restaurant-menu-composition-help admin-restaurant-menu-composition-error" required></textarea>', 'Un élément par ligne, entre 2 et 10 éléments.')}${field('admin-restaurant-menu-badge', 'Badge (facultatif)', '<input class="form-control" id="admin-restaurant-menu-badge" type="text" maxlength="40" aria-describedby="admin-restaurant-menu-badge-error">')}${published('admin-restaurant-menu-published')}`, 'Ajouter le menu');
-  const deletion = `<div class="modal fade admin-menu-modal" id="admin-menu-delete-modal" tabindex="-1" aria-labelledby="admin-menu-delete-modal-title" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="admin-menu-delete-modal-title">Confirmer la suppression</h2><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Fermer"></button></div><div class="modal-body"><dl class="admin-menu-delete-summary" id="admin-menu-delete-summary"></dl></div><div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Conserver</button><button class="btn btn-danger" id="admin-menu-confirm-delete" type="button">Supprimer définitivement de la simulation</button></div></div></div></div>`;
-  return category + dish + menu + deletion;
-}
+const error = (name) => `<p class="text-danger" data-error-for="${name}"></p>`;
 
 export function AdminMenuManagementPage() {
-  return AdminLayout(`<header class="admin-menu-intro"><p class="admin-eyebrow">Offre du restaurant</p><h1>Gestion de la carte et des menus</h1><p>Gérez les catégories, les plats et les menus. Toutes les données affichées sont simulées et indépendantes de la page publique.</p></header><div class="admin-menu-live alert d-none" id="admin-menu-live" role="status" aria-live="polite" tabindex="-1"></div><section class="admin-menu-indicators" id="admin-menu-indicators" aria-label="Indicateurs de la carte et des menus"></section><nav class="admin-menu-anchor-nav" aria-label="Navigation dans la gestion de la carte"><a href="#admin-categories">Catégories</a><a href="#admin-dishes">Plats</a><a href="#admin-menus">Menus</a></nav>
-    <section class="admin-menu-section" id="admin-categories" aria-labelledby="admin-categories-title"><div class="admin-menu-section-heading"><div><h2 id="admin-categories-title">Catégories</h2><p>Structurez les différentes parties de la carte.</p></div><button class="btn btn-primary" id="admin-add-category" type="button">Ajouter une catégorie</button></div><p class="admin-menu-info">Un plat publié appartenant à une catégorie masquée ne sera ultérieurement pas visible sur la carte publique.</p><div class="admin-menu-category-grid" id="admin-category-list"></div></section>
-    <section class="admin-menu-section" id="admin-dishes" aria-labelledby="admin-dishes-title"><div class="admin-menu-section-heading"><div><h2 id="admin-dishes-title">Plats</h2><p>Gérez les plats et leur position dans chaque catégorie.</p></div><button class="btn btn-primary" id="admin-add-dish" type="button">Ajouter un plat</button></div><div class="admin-menu-filter-grid"><div class="admin-menu-field"><label for="admin-dish-search">Rechercher un plat</label><input class="form-control" id="admin-dish-search" type="search"></div><div class="admin-menu-field"><label for="admin-dish-category-filter">Catégorie</label><select class="form-select" id="admin-dish-category-filter"></select></div><div class="admin-menu-field"><label for="admin-dish-status-filter">Statut</label><select class="form-select" id="admin-dish-status-filter"><option value="all">Tous les statuts</option><option value="published">Publiés</option><option value="hidden">Masqués</option></select></div><button class="btn admin-menu-reset" id="admin-dish-reset" type="button">Réinitialiser les filtres</button></div><div id="admin-dish-list" aria-live="polite"></div></section>
-    <section class="admin-menu-section" id="admin-menus" aria-labelledby="admin-menus-title"><div class="admin-menu-section-heading"><div><h2 id="admin-menus-title">Menus</h2><p>Composez les formules proposées par le restaurant.</p></div><button class="btn btn-primary" id="admin-add-menu" type="button">Ajouter un menu</button></div><div class="admin-menu-filter-grid admin-menu-filter-grid--menus"><div class="admin-menu-field"><label for="admin-menu-search">Rechercher un menu</label><input class="form-control" id="admin-menu-search" type="search"></div><div class="admin-menu-field"><label for="admin-menu-status-filter">Statut</label><select class="form-select" id="admin-menu-status-filter"><option value="all">Tous les statuts</option><option value="published">Publiés</option><option value="hidden">Masqués</option></select></div><button class="btn admin-menu-reset" id="admin-menu-reset" type="button">Réinitialiser les filtres</button></div><div id="admin-restaurant-menu-list" aria-live="polite"></div></section>${createModals()}`);
+  return AdminLayout(`
+    <header class="admin-menu-intro"><p class="admin-eyebrow">Offre du restaurant</p><h1>Catégories, plats et menus</h1></header>
+    <div class="alert d-none" data-catalog-message role="status" aria-live="polite"></div>
+    <section class="admin-menu-section"><h2>Catégories</h2>
+      <form data-category-form novalidate><input type="hidden" name="id"><label>Titre<input class="form-control" name="title" maxlength="64" required></label>${error('title')}<button class="btn btn-primary" type="submit">Enregistrer</button><button class="btn btn-secondary" type="reset">Nouveau</button></form>
+      <div data-category-list><p>Chargement…</p></div>
+    </section>
+    <section class="admin-menu-section"><h2>Plats</h2>
+      <form data-food-form novalidate><input type="hidden" name="id"><label>Titre<input class="form-control" name="title" maxlength="64" required></label>${error('title')}<label>Description<textarea class="form-control" name="description" required></textarea></label>${error('description')}<label>Prix en euros<input class="form-control" name="priceEuros" inputmode="decimal" required></label>${error('price')}<label>Catégories<select class="form-select" name="categoryIds" multiple></select></label>${error('categoryIds')}<button class="btn btn-primary" type="submit">Enregistrer</button><button class="btn btn-secondary" type="reset">Nouveau</button></form>
+      <div data-food-list><p>Chargement…</p></div>
+    </section>
+    <section class="admin-menu-section"><h2>Menus</h2>
+      <form data-menu-form novalidate><input type="hidden" name="id"><label>Titre<input class="form-control" name="title" maxlength="64" required></label>${error('title')}<label>Description<textarea class="form-control" name="description" required></textarea></label>${error('description')}<label>Prix en euros<input class="form-control" name="priceEuros" inputmode="decimal" required></label>${error('price')}<label>Catégories<select class="form-select" name="categoryIds" multiple required></select></label>${error('categoryIds')}<button class="btn btn-primary" type="submit">Enregistrer</button><button class="btn btn-secondary" type="reset">Nouveau</button></form>
+      <div data-menu-list><p>Chargement…</p></div>
+    </section>
+  `);
 }
 
 export function initAdminMenuManagementPage() {
-  const cleanupAdminLayout = initAdminLayout();
-  const q = (selector) => document.querySelector(selector);
-  const requiredSelectors = ['#admin-menu-indicators','#admin-category-list','#admin-dish-list','#admin-restaurant-menu-list','#admin-menu-live','#admin-add-category','#admin-add-dish','#admin-add-menu','#admin-dish-search','#admin-dish-category-filter','#admin-dish-status-filter','#admin-dish-reset','#admin-menu-search','#admin-menu-status-filter','#admin-menu-reset','#admin-category-modal','#admin-dish-modal','#admin-restaurant-menu-modal','#admin-menu-delete-modal','#admin-category-form','#admin-dish-form','#admin-restaurant-menu-form','#admin-menu-delete-summary','#admin-menu-confirm-delete'];
-  const elements = Object.fromEntries(requiredSelectors.map((selector) => [selector, q(selector)]));
-  if (Object.values(elements).some((element) => !element)) { cleanupAdminLayout?.(); return undefined; }
-  const categories = INITIAL_CATEGORIES.map((item) => ({ ...item })); const dishes = INITIAL_DISHES.map((item) => ({ ...item })); const menus = INITIAL_MENUS.map((item) => ({ ...item, composition: [...item.composition] }));
-  let nextCategoryId = 504; let nextDishId = 610; let nextMenuId = 704; let editing = null; let deleting = null; let focusAfterModal = false;
-  const listeners = []; const modalEntries = { category: [q('#admin-category-modal'), q('#admin-category-form')], dish: [q('#admin-dish-modal'), q('#admin-dish-form')], menu: [q('#admin-restaurant-menu-modal'), q('#admin-restaurant-menu-form')] };
-  const modals = Object.fromEntries(Object.entries(modalEntries).map(([key, [element]]) => [key, Modal.getOrCreateInstance(element)])); const deleteModal = Modal.getOrCreateInstance(elements['#admin-menu-delete-modal']);
-  const addListener = (element, event, handler) => { element.addEventListener(event, handler); listeners.push(() => element.removeEventListener(event, handler)); };
-  const announce = (message, type = 'success') => { const live = elements['#admin-menu-live']; live.textContent = message; live.className = `admin-menu-live alert alert-${type}`; };
-  const setError = (input, message) => { const error = q(`#${input.id}-error`); error.textContent = message; input.classList.toggle('is-invalid', Boolean(message)); input.setAttribute('aria-invalid', String(Boolean(message))); return !message; };
-  const categoryName = (id) => categories.find((item) => item.id === id)?.name ?? 'Catégorie inconnue';
+  const cleanup = initAdminLayout();
+  const message = document.querySelector('[data-catalog-message]');
+  const forms = {
+    category: document.querySelector('[data-category-form]'),
+    food: document.querySelector('[data-food-form]'),
+    menu: document.querySelector('[data-menu-form]'),
+  };
+  let categories = [];
+  let foods = [];
+  let menus = [];
+  let restaurant = null;
+  let controller = new AbortController();
+  const announce = (text, type = 'success') => { message.className = `alert alert-${type}`; message.textContent = text; };
 
-  function categoryOptions(includeAll = false) { return `${includeAll ? '<option value="all">Toutes les catégories</option>' : '<option value="">Sélectionner une catégorie</option>'}${categories.sort((a,b)=>a.order-b.order).map((category) => `<option value="${category.id}">${escapeHtml(category.name)}</option>`).join('')}`; }
-  function updateCategorySelects() { const filter = elements['#admin-dish-category-filter']; const previous = filter.value || 'all'; filter.innerHTML = categoryOptions(true); filter.value = [...filter.options].some((option) => option.value === previous) ? previous : 'all'; q('#admin-dish-category').innerHTML = categoryOptions(false); }
-  function dishFilters() { return { search: normalizeText(elements['#admin-dish-search'].value).toLocaleLowerCase('fr-FR'), category: elements['#admin-dish-category-filter'].value, status: elements['#admin-dish-status-filter'].value }; }
-  function menuFilters() { return { search: normalizeText(elements['#admin-menu-search'].value).toLocaleLowerCase('fr-FR'), status: elements['#admin-menu-status-filter'].value }; }
+  const fillCategorySelects = () => {
+    [forms.food.elements.categoryIds, forms.menu.elements.categoryIds].forEach((select) => {
+      const selected = [...select.selectedOptions].map((option) => Number(option.value));
+      select.replaceChildren();
+      categories.forEach((category) => {
+        const option = document.createElement('option');
+        option.value = category.id;
+        option.textContent = category.title;
+        option.selected = selected.includes(category.id);
+        select.append(option);
+      });
+    });
+  };
 
-  function render() {
-    normalizeOrder(categories); categories.forEach((category) => normalizeDishOrder(dishes, category.id)); normalizeOrder(menus); updateCategorySelects();
-    elements['#admin-menu-indicators'].innerHTML = renderIndicators(categories, dishes, menus); elements['#admin-category-list'].innerHTML = createCategoryCards(categories, dishes);
-    const df = dishFilters(); const filteredDishes = dishes.filter((dish) => (df.category === 'all' || dish.categoryId === Number(df.category)) && (df.status === 'all' || (df.status === 'published' ? dish.isPublished : !dish.isPublished)) && (!df.search || `${dish.name} ${dish.description}`.toLocaleLowerCase('fr-FR').includes(df.search))).sort((a,b) => (categories.find(c=>c.id===a.categoryId)?.order ?? 99)-(categories.find(c=>c.id===b.categoryId)?.order ?? 99) || a.order-b.order);
-    elements['#admin-dish-list'].className = filteredDishes.length ? 'admin-menu-dish-grid' : ''; elements['#admin-dish-list'].innerHTML = filteredDishes.length ? createDishCards(filteredDishes, categories, dishes) : '<p class="admin-menu-empty">Aucun plat ne correspond aux critères sélectionnés.</p>';
-    const mf = menuFilters(); const filteredMenus = menus.filter((menu) => (mf.status === 'all' || (mf.status === 'published' ? menu.isPublished : !menu.isPublished)) && (!mf.search || `${menu.name} ${menu.description}`.toLocaleLowerCase('fr-FR').includes(mf.search))).sort((a,b)=>a.order-b.order);
-    elements['#admin-restaurant-menu-list'].className = filteredMenus.length ? 'admin-menu-restaurant-grid' : ''; elements['#admin-restaurant-menu-list'].innerHTML = filteredMenus.length ? createMenuCards(filteredMenus, menus) : '<p class="admin-menu-empty">Aucun menu ne correspond aux critères sélectionnés.</p>';
-  }
+  const actionButtons = (item, editHandler, deleteHandler) => {
+    const wrapper = document.createElement('span');
+    const edit = document.createElement('button');
+    edit.className = 'btn btn-sm btn-secondary';
+    edit.type = 'button';
+    edit.textContent = 'Modifier';
+    edit.addEventListener('click', () => editHandler(item));
+    const remove = document.createElement('button');
+    remove.className = 'btn btn-sm btn-danger ms-2';
+    remove.type = 'button';
+    remove.textContent = 'Supprimer';
+    remove.addEventListener('click', async () => {
+      if (!window.confirm(`Supprimer « ${item.title} » ? Les relations associées peuvent être affectées.`)) return;
+      remove.disabled = true;
+      try { await deleteHandler(item.id); await load(); announce('Élément supprimé.'); } catch (requestError) { announce(apiErrorMessage(requestError), 'danger'); remove.disabled = false; }
+    });
+    wrapper.append(edit, remove);
+    return wrapper;
+  };
 
-  function clearForm(form) { form.reset(); form.querySelectorAll('.is-invalid').forEach((input) => { input.classList.remove('is-invalid'); input.setAttribute('aria-invalid','false'); }); form.querySelectorAll('.admin-menu-error').forEach((error) => { error.textContent=''; }); }
-  function openForm(type, item = null) {
-    editing = item ? { type, id: item.id } : { type, id: null }; const [modalElement, form] = modalEntries[type]; clearForm(form);
-    const isEdit = Boolean(item); modalElement.querySelector('.modal-title').textContent = `${isEdit ? 'Modifier' : 'Ajouter'} ${type === 'category' ? 'une catégorie' : type === 'dish' ? 'un plat' : 'un menu'}`; modalElement.querySelector('[data-modal-submit]').textContent = isEdit ? 'Enregistrer les modifications' : `Ajouter ${type === 'category' ? 'la catégorie' : type === 'dish' ? 'le plat' : 'le menu'}`;
-    if (type === 'category' && item) { q('#admin-category-name').value=item.name; q('#admin-category-description').value=item.description; q('#admin-category-published').checked=item.isPublished; }
-    if (type === 'dish') { q('#admin-dish-category').innerHTML=categoryOptions(false); if(item){q('#admin-dish-name').value=item.name;q('#admin-dish-description').value=item.description;q('#admin-dish-price').value=String(item.price);q('#admin-dish-category').value=String(item.categoryId);q('#admin-dish-dietary').value=item.dietaryInformation;q('#admin-dish-variant').value=item.visualVariant;q('#admin-dish-published').checked=item.isPublished;} }
-    if (type === 'menu' && item) { q('#admin-restaurant-menu-name').value=item.name;q('#admin-restaurant-menu-description').value=item.description;q('#admin-restaurant-menu-price').value=String(item.price);q('#admin-restaurant-menu-composition').value=item.composition.join('\n');q('#admin-restaurant-menu-badge').value=item.badge;q('#admin-restaurant-menu-published').checked=item.isPublished; }
-    modals[type].show();
-  }
+  const renderList = (selector, items, editHandler, deleteHandler, details) => {
+    const target = document.querySelector(selector);
+    target.replaceChildren();
+    if (!items.length) { target.textContent = 'Aucun élément disponible.'; return; }
+    items.forEach((item) => {
+      const article = document.createElement('article');
+      article.className = 'admin-menu-item';
+      const title = document.createElement('h3');
+      title.textContent = item.title;
+      article.append(title);
+      if (details) {
+        const text = document.createElement('p');
+        text.textContent = details(item);
+        article.append(text);
+      }
+      article.append(actionButtons(item, editHandler, deleteHandler));
+      target.append(article);
+    });
+  };
 
-  function validText(input, min, max, label) { input.value=normalizeText(input.value); return setError(input, input.value.length>=min&&input.value.length<=max?'':`${label} doit contenir entre ${min} et ${max} caractères.`); }
-  function validPrice(input) { const value=input.value; const price=Number(value); return setError(input, /^\d+(?:\.\d{1,2})?$/.test(value)&&price>0&&price<=500?'':'Le prix doit être supérieur à 0, inférieur ou égal à 500 et comporter au maximum deux décimales.'); }
+  const render = () => {
+    fillCategorySelects();
+    renderList('[data-category-list]', categories, (item) => {
+      forms.category.elements.id.value = item.id;
+      forms.category.elements.title.value = item.title;
+    }, deleteCategory);
+    renderList('[data-food-list]', foods, (item) => {
+      forms.food.elements.id.value = item.id;
+      forms.food.elements.title.value = item.title;
+      forms.food.elements.description.value = item.description;
+      forms.food.elements.priceEuros.value = centsToEurosInput(item.price);
+      [...forms.food.elements.categoryIds.options].forEach((option) => { option.selected = item.categories.some((category) => category.id === Number(option.value)); });
+    }, deleteFood, (item) => `${item.description} · ${formatPrice(item.price)}`);
+    renderList('[data-menu-list]', menus, (item) => {
+      forms.menu.elements.id.value = item.id;
+      forms.menu.elements.title.value = item.title;
+      forms.menu.elements.description.value = item.description;
+      forms.menu.elements.priceEuros.value = centsToEurosInput(item.price);
+      [...forms.menu.elements.categoryIds.options].forEach((option) => { option.selected = item.categories.some((category) => category.id === Number(option.value)); });
+    }, deleteMenu, (item) => `${item.description} · ${formatPrice(item.price)}`);
+  };
 
-  function submitCategory(event) { event.preventDefault(); const name=q('#admin-category-name');const description=q('#admin-category-description');const nameValid=validText(name,2,60,'Le nom');const duplicate=categories.some((category)=>category.id!==editing.id&&normalizeText(category.name).toLocaleLowerCase('fr-FR')===name.value.toLocaleLowerCase('fr-FR'));if(duplicate)setError(name,'Une catégorie portant ce nom existe déjà.');const descriptionValid=validText(description,5,180,'La description');if(!nameValid||duplicate||!descriptionValid){event.currentTarget.querySelector('.is-invalid')?.focus();return;} let item;if(editing.id){item=categories.find((entry)=>entry.id===editing.id);Object.assign(item,{name:name.value,description:description.value,isPublished:q('#admin-category-published').checked});}else{item={id:nextCategoryId++,name:name.value,description:description.value,isPublished:q('#admin-category-published').checked,order:categories.length+1};categories.push(item);}prepareCategory(item);render();announce(`${editing.id?'La modification':'L’ajout'} de la catégorie est simulé.`);focusAfterModal=true;modals.category.hide(); }
-  function submitDish(event) { event.preventDefault();const name=q('#admin-dish-name');const description=q('#admin-dish-description');const price=q('#admin-dish-price');const category=q('#admin-dish-category');const dietary=q('#admin-dish-dietary');const variant=q('#admin-dish-variant');const valid=[validText(name,2,100,'Le nom'),validText(description,5,300,'La description'),validPrice(price),setError(category,categories.some((entry)=>entry.id===Number(category.value))?'':'Sélectionnez une catégorie valide.'),setError(dietary,normalizeText(dietary.value).length<=80?'':'L’information alimentaire ne doit pas dépasser 80 caractères.'),setError(variant,VISUAL_VARIANTS.includes(variant.value)?'':'Sélectionnez une variante valide.')];if(valid.includes(false)){event.currentTarget.querySelector('.is-invalid')?.focus();return;}dietary.value=normalizeText(dietary.value);let item;if(editing.id){item=dishes.find((entry)=>entry.id===editing.id);const oldCategory=item.categoryId;const newCategory=Number(category.value);Object.assign(item,{name:name.value,description:description.value,price:Number(price.value),categoryId:newCategory,dietaryInformation:dietary.value,visualVariant:variant.value,isPublished:q('#admin-dish-published').checked});if(oldCategory!==newCategory){normalizeDishOrder(dishes,oldCategory);item.order=dishes.filter((entry)=>entry.categoryId===newCategory&&entry.id!==item.id).length+1;normalizeDishOrder(dishes,newCategory);}}else{const categoryId=Number(category.value);item={id:nextDishId++,name:name.value,description:description.value,price:Number(price.value),categoryId,dietaryInformation:dietary.value,visualVariant:variant.value,isPublished:q('#admin-dish-published').checked,order:dishes.filter((entry)=>entry.categoryId===categoryId).length+1};dishes.push(item);}prepareDish(item);render();announce(`${editing.id?'La modification':'L’ajout'} du plat est simulé.`);focusAfterModal=true;modals.dish.hide(); }
-  function submitMenu(event) { event.preventDefault();const name=q('#admin-restaurant-menu-name');const description=q('#admin-restaurant-menu-description');const price=q('#admin-restaurant-menu-price');const compositionInput=q('#admin-restaurant-menu-composition');const badge=q('#admin-restaurant-menu-badge');const composition=compositionInput.value.split('\n').map(normalizeText).filter(Boolean);const compositionValid=composition.length>=2&&composition.length<=10&&composition.every((entry)=>entry.length>=2&&entry.length<=120);const valid=[validText(name,2,100,'Le nom'),validText(description,5,300,'La description'),validPrice(price),setError(compositionInput,compositionValid?'':'La composition doit contenir entre 2 et 10 éléments de 2 à 120 caractères.'),setError(badge,normalizeText(badge.value).length<=40?'':'Le badge ne doit pas dépasser 40 caractères.')];if(valid.includes(false)){event.currentTarget.querySelector('.is-invalid')?.focus();return;}badge.value=normalizeText(badge.value);let item;if(editing.id){item=menus.find((entry)=>entry.id===editing.id);Object.assign(item,{name:name.value,description:description.value,price:Number(price.value),composition,badge:badge.value,isPublished:q('#admin-restaurant-menu-published').checked});}else{item={id:nextMenuId++,name:name.value,description:description.value,price:Number(price.value),composition,badge:badge.value,isPublished:q('#admin-restaurant-menu-published').checked,order:menus.length+1};menus.push(item);}prepareMenu(item);render();announce(`${editing.id?'La modification':'L’ajout'} du menu est simulé.`);focusAfterModal=true;modals.menu.hide(); }
+  const load = async () => {
+    [categories, foods, menus, restaurant] = await Promise.all([
+      getCategories({ signal: controller.signal }),
+      getFoods({ signal: controller.signal }),
+      getMenus({ signal: controller.signal }),
+      getRestaurant({ signal: controller.signal }),
+    ]);
+    render();
+  };
 
-  function collection(type) { return type==='category'?categories:type==='dish'?dishes:menus; }
-  function handleAction(event) { const button=event.target.closest('[data-menu-action]');if(!button||button.disabled)return;const type=button.dataset.menuType;const item=collection(type).find((entry)=>entry.id===Number(button.dataset.menuId));if(!item)return;const action=button.dataset.menuAction;if(action==='edit')openForm(type,item);else if(action==='publish'){item.isPublished=!item.isPublished;preparePublication(item);render();announce(`${item.name} est maintenant ${item.isPublished?'publié':'masqué'}.`);}else if(action==='up'||action==='down'){const peers=type==='dish'?dishes.filter((entry)=>entry.categoryId===item.categoryId):collection(type);normalizeOrder(peers);const index=peers.indexOf(item);const target=peers[index+(action==='up'?-1:1)];if(target){[item.order,target.order]=[target.order,item.order];normalizeOrder(peers);prepareOrder(peers);render();announce(`${item.name} a été déplacé dans l’ordre d’affichage.`);}}else if(action==='delete'){if(type==='category'){const count=dishes.filter((dish)=>dish.categoryId===item.id).length;if(count){announce(`La catégorie ${item.name} contient ${count} plat${count>1?'s':''}. Déplacez ou supprimez ces plats avant de supprimer la catégorie.`,'warning');return;}}deleting={type,id:item.id};elements['#admin-menu-delete-summary'].innerHTML=`<div><dt>Type</dt><dd>${type==='category'?'Catégorie':type==='dish'?'Plat':'Menu'}</dd></div><div><dt>Nom</dt><dd>${escapeHtml(item.name)}</dd></div><div><dt>Statut</dt><dd>${item.isPublished?'Publié':'Masqué'}</dd></div><div><dt>Position</dt><dd>${item.order}</dd></div>`;deleteModal.show();} }
-  function confirmDeletion(){if(!deleting)return;const items=collection(deleting.type);const index=items.findIndex((item)=>item.id===deleting.id);if(index<0)return;const [item]=items.splice(index,1);prepareDeletion(item.id);if(deleting.type==='dish')normalizeDishOrder(dishes,item.categoryId);else normalizeOrder(items);render();announce(`La suppression de ${item.name} est simulée.`);focusAfterModal=true;deleteModal.hide();}
-  function focusOnLive(){if(focusAfterModal){focusAfterModal=false;elements['#admin-menu-live'].focus();}}
+  forms.category.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const id = Number(form.elements.id.value);
+    const payload = { title: form.elements.title.value.trim() };
+    try {
+      await (id ? updateCategory(id, payload) : createCategory(payload));
+      form.reset(); await load(); announce(id ? 'Catégorie modifiée.' : 'Catégorie créée.');
+    } catch (requestError) { if (requestError.status === 422) showFormErrors(form, requestError.data?.fields); announce(apiErrorMessage(requestError), 'danger'); }
+  });
 
-  addListener(q('#admin-add-category'),'click',()=>openForm('category'));addListener(q('#admin-add-dish'),'click',()=>openForm('dish'));addListener(q('#admin-add-menu'),'click',()=>openForm('menu'));
-  ['#admin-category-list','#admin-dish-list','#admin-restaurant-menu-list'].forEach((selector)=>addListener(elements[selector]??q(selector),'click',handleAction));
-  addListener(elements['#admin-dish-search'],'input',render);addListener(elements['#admin-dish-category-filter'],'change',render);addListener(elements['#admin-dish-status-filter'],'change',render);addListener(elements['#admin-dish-reset'],'click',()=>{elements['#admin-dish-search'].value='';elements['#admin-dish-category-filter'].value='all';elements['#admin-dish-status-filter'].value='all';render();});
-  addListener(elements['#admin-menu-search'],'input',render);addListener(elements['#admin-menu-status-filter'],'change',render);addListener(elements['#admin-menu-reset'],'click',()=>{elements['#admin-menu-search'].value='';elements['#admin-menu-status-filter'].value='all';render();});
-  addListener(modalEntries.category[1],'submit',submitCategory);addListener(modalEntries.dish[1],'submit',submitDish);addListener(modalEntries.menu[1],'submit',submitMenu);addListener(elements['#admin-menu-confirm-delete'],'click',confirmDeletion);
-  [...Object.values(modalEntries).map(([element])=>element),elements['#admin-menu-delete-modal']].forEach((element)=>addListener(element,'hidden.bs.modal',focusOnLive));render();
-  return()=>{listeners.forEach((remove)=>remove());[...Object.values(modals),deleteModal].forEach((modal)=>{modal.hide();modal.dispose();});cleanupBootstrapOverlayState();cleanupAdminLayout?.();};
+  const bindProductForm = (form, create, update, label, includeRestaurant) => {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearFormErrors(form);
+      const id = Number(form.elements.id.value);
+      const price = eurosInputToCents(form.elements.priceEuros.value);
+      const payload = {
+        title: form.elements.title.value.trim(),
+        description: form.elements.description.value.trim(),
+        price,
+        categoryIds: [...form.elements.categoryIds.selectedOptions].map((option) => Number(option.value)),
+      };
+      if (includeRestaurant) payload.restaurantId = restaurant.id;
+      if (price === null) { showFormErrors(form, { price: 'Saisissez un prix valide et positif.' }); return; }
+      if (includeRestaurant && !payload.categoryIds.length) { showFormErrors(form, { categoryIds: 'Sélectionnez au moins une catégorie.' }); return; }
+      try {
+        await (id ? update(id, payload) : create(payload));
+        form.reset(); await load(); announce(`${label} ${id ? 'modifié' : 'créé'}.`);
+      } catch (requestError) { if (requestError.status === 422) showFormErrors(form, requestError.data?.fields); announce(apiErrorMessage(requestError), 'danger'); }
+    });
+  };
+  bindProductForm(forms.food, createFood, updateFood, 'Plat', false);
+  bindProductForm(forms.menu, createMenu, updateMenu, 'Menu', true);
+  Object.values(forms).forEach((form) => form.addEventListener('reset', () => { form.elements.id.value = ''; clearFormErrors(form); }));
+  load().catch((requestError) => announce(apiErrorMessage(requestError), 'danger'));
+  return () => { controller.abort(); cleanup?.(); };
 }
