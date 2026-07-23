@@ -47,8 +47,11 @@
 }
 
 .gallery-card__visual {
+  display: block;
+  width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: 0;
+  object-fit: cover;
   transition: transform 180ms ease;
 }
 

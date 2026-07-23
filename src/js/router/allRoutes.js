@@ -6,18 +6,18 @@ import { AdminHoursCapacityPage, initAdminHoursCapacityPage } from '../pages/Adm
 import { AdminGalleryPage, initAdminGalleryPage } from '../pages/AdminGalleryPage.js';
 import { AdminMenuManagementPage, initAdminMenuManagementPage } from '../pages/AdminMenuManagementPage.js';
 import { AdminReservationsPage, initAdminReservationsPage } from '../pages/AdminReservationsPage.js';
-import { HomePage } from '../pages/HomePage.js';
+import { HomePage, initHomePage } from '../pages/HomePage.js';
 import { initLoginPage, LoginPage } from '../pages/LoginPage.js';
-import { MenuPage } from '../pages/MenuPage.js';
+import { initMenuPage, MenuPage } from '../pages/MenuPage.js';
 import { NotFoundPage } from '../pages/NotFoundPage.js';
 import { initReservationPage, ReservationPage } from '../pages/ReservationPage.js';
 import { initSignupPage, SignupPage } from '../pages/SignupPage.js';
 import { Route } from './Route.js';
 
 export const allRoutes = [
-  new Route('/', HomePage),
+  new Route('/', HomePage, initHomePage),
   new Route('/galerie', GalleryPage, initGalleryPage),
-  new Route('/carte-et-menus', MenuPage),
+  new Route('/carte-et-menus', MenuPage, initMenuPage),
   new Route('/reservation', ReservationPage, initReservationPage),
   new Route('/connexion', LoginPage, initLoginPage),
   new Route('/inscription', SignupPage, initSignupPage),

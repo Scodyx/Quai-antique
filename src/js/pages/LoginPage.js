@@ -1,6 +1,8 @@
 import { Footer } from '../components/Footer.js';
 import { Header } from '../components/Header.js';
 import { initializePasswordToggles } from '../utils/passwordVisibility.js';
+import { login } from '../auth/authService.js';
+import { ApiError } from '../api/ApiError.js';
 
 const PENDING_RESERVATION_KEY = 'quaiAntique.pendingReservation';
 
@@ -165,7 +167,7 @@ export function initLoginPage() {
     feedback.textContent = '';
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     hideFeedback();
 
@@ -177,10 +179,28 @@ export function initLoginPage() {
       return;
     }
 
-    prepareLoginData(emailInput);
-    // Le futur appel de connexion à l’API Symfony sera effectué ici.
-    feedback.textContent = 'Le formulaire est valide. La connexion sera finalisée lors du branchement à l’API Symfony.';
-    feedback.classList.remove('d-none');
+    const submitButton = form.querySelector('[type="submit"]');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Connexion…';
+
+    try {
+      const data = prepareLoginData(emailInput);
+      await login(data.email, passwordInput.value);
+      feedback.className = 'auth-feedback alert alert-success';
+      feedback.textContent = 'Connexion réussie.';
+      window.setTimeout(() => {
+        window.history.pushState({}, '', '/');
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }, 350);
+    } catch (error) {
+      feedback.className = 'auth-feedback alert alert-danger';
+      feedback.textContent = error instanceof ApiError && error.status === 401
+        ? 'Adresse e-mail ou mot de passe incorrect'
+        : 'Impossible de vous connecter pour le moment.';
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = 'Se connecter';
+    }
   }
 
   addListener(form, 'submit', handleSubmit);

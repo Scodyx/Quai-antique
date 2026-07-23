@@ -1,28 +1,44 @@
-export function Header() {
-  const currentPath = window.location.pathname;
-  const navigationLinks = [
+import {
+  AUTH_CHANGED_EVENT,
+  isAdmin,
+  isAuthenticated,
+  logout,
+} from '../auth/authService.js';
+
+function navigationLinks() {
+  const links = [
     { label: 'Accueil', path: '/' },
     { label: 'Galerie', path: '/galerie' },
     { label: 'Carte et menus', path: '/carte-et-menus' },
     { label: 'Réservation', path: '/reservation' },
-    { label: 'Connexion', path: '/connexion' },
-    // Ce lien temporaire dépendra plus tard de l’état d’authentification réel.
-    { label: 'Mon compte', path: '/mon-compte' },
   ];
 
-  const navigationItems = navigationLinks
-    .map(({ label, path }) => {
-      const isActive = currentPath === path;
-      const activeClass = isActive ? ' active' : '';
-      const ariaCurrent = isActive ? ' aria-current="page"' : '';
+  if (isAuthenticated()) {
+    links.push({ label: 'Mon compte', path: '/mon-compte' });
+    if (isAdmin()) links.push({ label: 'Administration', path: '/administration' });
+  } else {
+    links.push({ label: 'Connexion', path: '/connexion' });
+    links.push({ label: 'Inscription', path: '/inscription' });
+  }
 
-      return `
-        <li class="nav-item">
-          <a class="nav-link${activeClass}" href="${path}" data-link${ariaCurrent}>${label}</a>
-        </li>
-      `;
-    })
-    .join('');
+  return links;
+}
+
+export function Header() {
+  const currentPath = window.location.pathname;
+  const navigationItems = navigationLinks().map(({ label, path }) => {
+    const isActive = currentPath === path;
+
+    return `
+      <li class="nav-item">
+        <a class="nav-link${isActive ? ' active' : ''}" href="${path}" data-link${isActive ? ' aria-current="page"' : ''}>${label}</a>
+      </li>
+    `;
+  }).join('');
+
+  const logoutButton = isAuthenticated()
+    ? '<li class="nav-item"><button class="nav-link" type="button" data-auth-logout>Déconnexion</button></li>'
+    : '';
 
   return `
     <header class="site-header">
@@ -32,22 +48,13 @@ export function Header() {
             <span class="site-header__brand-name">Quai Antique</span>
             <span class="site-header__brand-caption">Restaurant</span>
           </a>
-
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#main-navigation"
-            aria-controls="main-navigation"
-            aria-expanded="false"
-            aria-label="Afficher ou masquer la navigation"
-          >
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navigation" aria-controls="main-navigation" aria-expanded="false" aria-label="Afficher ou masquer la navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-
           <div class="collapse navbar-collapse" id="main-navigation">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
               ${navigationItems}
+              ${logoutButton}
             </ul>
           </div>
         </div>
@@ -55,3 +62,20 @@ export function Header() {
     </header>
   `;
 }
+
+export function updateAuthUI() {
+  const header = document.querySelector('.site-header');
+  if (!header) return;
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = Header();
+  header.replaceWith(wrapper.firstElementChild);
+}
+
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('[data-auth-logout]')) return;
+  logout();
+  window.history.pushState({}, '', '/');
+  window.dispatchEvent(new PopStateEvent('popstate'));
+});
+
+window.addEventListener(AUTH_CHANGED_EVENT, updateAuthUI);

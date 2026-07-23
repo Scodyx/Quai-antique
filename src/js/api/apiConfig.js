@@ -1,7 +1,8 @@
 import { ApiError, API_ERROR_MESSAGES } from './ApiError.js';
 
 function readConfiguredBaseUrl() {
-  return import.meta.env?.VITE_API_BASE_URL?.trim().replace(/\/+$/, '') ?? '';
+  return import.meta.env?.VITE_API_URL?.trim().replace(/\/+$/, '')
+    || 'http://127.0.0.1:8000';
 }
 
 export function getApiBaseUrl() {

@@ -91,10 +91,12 @@ async function createHeaders(initialHeaders, body) {
     if (!headers.has('Accept')) headers.set('Accept', 'application/json');
   }
 
-  if (accessTokenProvider && !headers.has('Authorization')) {
+  if (!headers.has('Accept')) headers.set('Accept', 'application/json');
+
+  if (accessTokenProvider && !headers.has('X-AUTH-TOKEN')) {
     const token = await accessTokenProvider();
     if (typeof token === 'string' && token) {
-      headers.set('Authorization', `Bearer ${token}`);
+      headers.set('X-AUTH-TOKEN', token);
     }
   }
 

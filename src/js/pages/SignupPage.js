@@ -1,6 +1,8 @@
 import { Footer } from '../components/Footer.js';
 import { Header } from '../components/Header.js';
 import { initializePasswordToggles } from '../utils/passwordVisibility.js';
+import { register } from '../auth/authService.js';
+import { ApiError } from '../api/ApiError.js';
 
 const NAME_PATTERN = /^[\p{L}\p{M}]+(?:[ '\u2019-][\p{L}\p{M}]+)*$/u;
 const PASSWORD_RULES = [
@@ -20,8 +22,10 @@ function prepareSignupData(inputs) {
     firstName: normalizeName(inputs.firstName.value),
     lastName: normalizeName(inputs.lastName.value),
     email: inputs.email.value.trim(),
-    defaultGuests: Number(inputs.defaultGuests.value),
-    allergies: inputs.allergies.value.trim(),
+    password: inputs.password.value,
+    passwordConfirmation: inputs.passwordConfirmation.value,
+    guestNumber: Number(inputs.defaultGuests.value),
+    allergy: inputs.allergies.value.trim() || null,
   };
 }
 
@@ -256,7 +260,7 @@ export function initSignupPage() {
     }
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     hideFeedback();
 
@@ -274,10 +278,36 @@ export function initSignupPage() {
       return;
     }
 
-    prepareSignupData(inputs);
-    // Le futur appel de création de compte à l’API Symfony sera effectué ici.
-    feedback.textContent = 'Le formulaire est valide. La création du compte sera finalisée lors du branchement à l’API Symfony.';
-    feedback.classList.remove('d-none');
+    const submitButton = form.querySelector('[type="submit"]');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Création…';
+
+    try {
+      await register(prepareSignupData(inputs));
+      feedback.className = 'auth-feedback alert alert-success';
+      feedback.textContent = 'Votre compte a été créé.';
+      window.setTimeout(() => {
+        window.history.pushState({}, '', '/');
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }, 350);
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 422 && error.data?.fields) {
+        const fieldMap = { guestNumber: 'defaultGuests', allergy: 'allergies' };
+        Object.entries(error.data.fields).forEach(([field, message]) => {
+          const key = fieldMap[field] ?? field;
+          if (inputs[key] && errors[key]) setFieldError(inputs[key], errors[key], message);
+        });
+      }
+      feedback.className = 'auth-feedback alert alert-danger';
+      feedback.textContent = error instanceof ApiError && error.status === 409
+        ? 'Cette adresse e-mail est déjà utilisée.'
+        : (error instanceof ApiError && error.status === 422
+          ? 'Veuillez corriger les champs signalés.'
+          : 'Impossible de créer le compte pour le moment.');
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = 'Créer mon compte';
+    }
   }
 
   addListener(form, 'submit', handleSubmit);

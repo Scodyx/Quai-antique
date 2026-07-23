@@ -1,5 +1,7 @@
 import { Footer } from '../components/Footer.js';
 import { Header } from '../components/Header.js';
+import { getFoods, getPictures, getRestaurant } from '../api/publicApi.js';
+import { formatOpeningHours, formatPrice } from '../utils/formatters.js';
 
 export function HomePage() {
   return `
@@ -9,8 +11,8 @@ export function HomePage() {
         <div class="container site-container home-hero__layout">
           <div class="home-hero__content">
             <p class="section-eyebrow">Restaurant gastronomique à Chambéry</p>
-            <h1 id="home-title">Une table au bord de l’eau</h1>
-            <p class="home-hero__intro">
+            <h1 id="home-title" data-restaurant-name>Une table au bord de l’eau</h1>
+            <p class="home-hero__intro" data-restaurant-description>
               Une cuisine de saison, généreuse et précise, inspirée par les
               produits de Savoie et servie dans un cadre chaleureux.
             </p>
@@ -40,6 +42,7 @@ export function HomePage() {
           <div class="home-house__content">
             <p class="section-eyebrow">Quai Antique</p>
             <h2 id="house-title">Notre maison</h2>
+            <p class="visually-hidden" data-restaurant-status role="status" aria-live="polite">Chargement…</p>
             <p>
               À Chambéry, Quai Antique propose une cuisine gastronomique
               accessible, guidée par les saisons et le respect du produit.
@@ -61,7 +64,7 @@ export function HomePage() {
             <p>Une sélection provisoire qui illustre l’esprit de notre future carte.</p>
           </div>
 
-          <div class="dish-grid">
+          <div class="dish-grid" data-home-foods>
             <article class="dish-card">
               <div class="image-placeholder image-placeholder--dish image-placeholder--salmon" role="img" aria-label="Présentation temporaire d’un saumon rôti"></div>
               <div class="dish-card__body">
@@ -108,7 +111,7 @@ export function HomePage() {
             <a class="btn btn-secondary" href="/galerie" data-link>Voir toute la galerie</a>
           </div>
 
-          <div class="gallery-preview">
+          <div class="gallery-preview" data-home-pictures>
             <div class="image-placeholder image-placeholder--gallery image-placeholder--gallery-one" role="img" aria-label="Dressage temporaire d’une entrée de saison"></div>
             <div class="image-placeholder image-placeholder--gallery image-placeholder--gallery-two" role="img" aria-label="Vue temporaire d’une table dressée"></div>
             <div class="image-placeholder image-placeholder--gallery image-placeholder--gallery-three" role="img" aria-label="Dressage temporaire d’un plat gastronomique"></div>
@@ -134,7 +137,7 @@ export function HomePage() {
               depuis l’espace dédié.
             </p>
           </div>
-          <dl class="hours-list">
+          <dl class="hours-list" data-restaurant-hours>
             <div class="hours-list__row">
               <dt>Lundi</dt>
               <dd>Fermé</dd>
@@ -157,4 +160,93 @@ export function HomePage() {
     </div>
     ${Footer()}
   `;
+}
+
+export function initHomePage() {
+  const controller = new AbortController();
+  const name = document.querySelector('[data-restaurant-name]');
+  const description = document.querySelector('[data-restaurant-description]');
+  const status = document.querySelector('[data-restaurant-status]');
+  const hours = document.querySelector('[data-restaurant-hours]');
+
+  getRestaurant({ signal: controller.signal })
+    .then((restaurant) => {
+      if (!restaurant) {
+        status.textContent = 'Aucun élément disponible';
+        return;
+      }
+
+      name.textContent = restaurant.name;
+      description.textContent = restaurant.description;
+      status.textContent = '';
+      hours.replaceChildren();
+
+      [
+        ['Service du midi', formatOpeningHours(restaurant.amOpeningTime)],
+        ['Service du soir', formatOpeningHours(restaurant.pmOpeningTime)],
+        ['Capacité maximale', `${restaurant.maxGuest} couverts`],
+      ].forEach(([label, value]) => {
+        const row = document.createElement('div');
+        row.className = 'hours-list__row';
+        const term = document.createElement('dt');
+        const detail = document.createElement('dd');
+        term.textContent = label;
+        detail.textContent = value;
+        row.append(term, detail);
+        hours.append(row);
+      });
+    })
+    .catch((error) => {
+      if (error.code === 'REQUEST_ABORTED') return;
+      console.error('Chargement du restaurant impossible.', error);
+      status.classList.remove('visually-hidden');
+      status.textContent = 'Impossible de charger les données pour le moment';
+    });
+
+  getFoods({ signal: controller.signal })
+    .then((foods) => {
+      const grid = document.querySelector('[data-home-foods]');
+      grid.replaceChildren();
+      foods.slice(0, 3).forEach((food) => {
+        const card = document.createElement('article');
+        card.className = 'dish-card';
+        const body = document.createElement('div');
+        body.className = 'dish-card__body';
+        const heading = document.createElement('div');
+        heading.className = 'dish-card__heading';
+        const title = document.createElement('h3');
+        const price = document.createElement('p');
+        const descriptionElement = document.createElement('p');
+        title.textContent = food.title;
+        price.className = 'dish-card__price';
+        price.textContent = formatPrice(food.price);
+        descriptionElement.textContent = food.description;
+        heading.append(title, price);
+        body.append(heading, descriptionElement);
+        card.append(body);
+        grid.append(card);
+      });
+    })
+    .catch((error) => {
+      if (error.code !== 'REQUEST_ABORTED') console.error('Chargement des plats impossible.', error);
+    });
+
+  getPictures({ signal: controller.signal })
+    .then((pictures) => {
+      const preview = document.querySelector('[data-home-pictures]');
+      preview.replaceChildren();
+      pictures.slice(0, 4).forEach((picture) => {
+        const image = document.createElement('img');
+        image.className = 'image-placeholder image-placeholder--gallery';
+        image.src = picture.slug;
+        image.alt = picture.title;
+        image.loading = 'lazy';
+        preview.append(image);
+      });
+    })
+    .catch((error) => {
+      if (error.code !== 'REQUEST_ABORTED') console.error('Chargement des images impossible.', error);
+    });
+
+  return () => controller.abort();
 }
