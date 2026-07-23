@@ -26,6 +26,8 @@ config.local.*
 .env
 .env.*
 !.env.example
+!backend/.env
+!backend/.env.test
 
 # Éditeurs et système d'exploitation
 .vscode/

@@ -1,0 +1,59 @@
+security:
+    enable_authenticator_manager: true
+
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            stateless: true
+            provider: app_user_provider
+            json_login:
+                check_path: app_api_login
+                username_path: email
+                password_path: password
+            custom_authenticators:
+                - App\Security\ApiTokenAuthenticator
+            entry_point: App\Security\ApiTokenAuthenticator
+            access_denied_handler: App\Security\ApiAccessDeniedHandler
+
+    access_control:
+        - { path: ^/api/doc(?:\.json)?$, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/registration$, roles: PUBLIC_ACCESS, methods: [POST] }
+        - { path: ^/api/login$, roles: PUBLIC_ACCESS, methods: [POST] }
+        - { path: ^/api/restaurant(?:/\d+)?$, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/category(?:/\d+)?$, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/food(?:/\d+)?$, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/menu(?:/\d+)?$, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/picture(?:/\d+)?$, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/restaurant, roles: ROLE_ADMIN }
+        - { path: ^/api/category, roles: ROLE_ADMIN }
+        - { path: ^/api/food, roles: ROLE_ADMIN }
+        - { path: ^/api/menu, roles: ROLE_ADMIN }
+        - { path: ^/api/picture, roles: ROLE_ADMIN }
+        - { path: ^/api/booking/availability$, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/booking, roles: ROLE_USER }
+        - { path: ^/api/account, roles: ROLE_USER }
+        - { path: ^/api, roles: ROLE_USER }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10
